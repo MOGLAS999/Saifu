@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical" >
+    
+    <TextView 
+      android:textSize="16sp" 
+      android:id="@+id/txtDate" 
+      android:layout_height="wrap_content" 
+      android:layout_width="match_parent"
+      android:background="@+color/day_date_background_mono"
+      android:textColor="#FFFFFF" />
+    
+    <!--
+    <ListView
+        android:id="@+id/lstItem"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" >
+    </ListView> 
+    -->
+    <LinearLayout
+            android:orientation="vertical"
+            android:id="@+id/lstItem"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" >
+    </LinearLayout>
+    
+    <TextView 
+      android:textSize="16sp" 
+      android:id="@+id/txtBalance" 
+      android:layout_height="wrap_content" 
+      android:layout_width="match_parent"
+      android:background="@+color/day_balance_background_mono" />
+
+</LinearLayout>

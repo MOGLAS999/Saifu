@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<items version="2" >
+
+    <item
+        jar="C:\Users\Tak\AppData\Local\Android\sdk3\extras\android\m2repository\com\android\support\support-v4\18.0.0\support-v4-18.0.0.jar"
+        jumboMode="true"
+        revision="23.0.1"
+        sha1="44ec51e9d395a47aab135e5e1b556c0007442156">
+        <dex dex="C:\Users\Tak\AndroidStudioProjects\Saufu\app\build\intermediates\transforms\dex\debug\folders\1000\10\support-v4-18.0.0_fedccd98d655c755779f420cca9e19704bf6d822\classes.dex" />
+    </item>
+    <item
+        jar="C:\Users\Tak\AndroidStudioProjects\Saufu\app\build\intermediates\incremental-classes\debug\instant-run-bootstrap.jar"
+        jumboMode="true"
+        revision="23.0.1"
+        sha1="60af8d018c0a1e48971ded5b952e33a4ff4cedef">
+        <dex dex="C:\Users\Tak\AndroidStudioProjects\Saufu\app\build\intermediates\transforms\dex\debug\folders\1000\10\instant-run-bootstrap_f742d5e5b76cd3d1f21ce6e310eee0bd111574e0\classes.dex" />
+    </item>
+    <item
+        jar="C:\Users\Tak\AndroidStudioProjects\Saufu\app\build\intermediates\incremental-runtime-classes\debug\instant-run.jar"
+        jumboMode="true"
+        revision="23.0.1"
+        sha1="10d50f7c202fbca10fe2e3ff9bd4772467d8b3a0">
+        <dex dex="C:\Users\Tak\AndroidStudioProjects\Saufu\app\build\intermediates\transforms\dex\debug\folders\1000\10\instant-run_4ec4f11f66db04e051ec32c163386fff36d908fe\classes.dex" />
+    </item>
+
+</items>

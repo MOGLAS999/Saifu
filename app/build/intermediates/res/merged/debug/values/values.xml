@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="category_0">#FFFFFF</color>
+    <color name="category_1">#FA5858</color>
+    <color name="category_2">#FAAC58</color>
+    <color name="category_3">#F7FE2E</color>
+    <color name="category_4">#9AFE2E</color>
+    <color name="category_5">#01DF01</color>
+    <color name="category_6">#58FAF4</color>
+    <color name="category_7">#5882FA</color>
+    <color name="category_8">#D358F7</color>
+    <color name="category_9">#585858</color>
+    <color name="category_button_border">#000000</color>
+    <color name="day_balance_background">#b2ff59</color>
+    <color name="day_balance_background_brown">#d7ccc8</color>
+    <color name="day_balance_background_mono">#bdbdbd</color>
+    <color name="day_date_background">#33691e</color>
+    <color name="day_date_background_brown">#795548</color>
+    <color name="day_date_background_mono">#212121</color>
+    <color name="list_background_first_pressed">#A9F5BC</color>
+    <color name="list_background_first_unpressed">#FFFFFF</color>
+    <color name="list_background_second_pressed">#A9F5BC</color>
+    <color name="list_background_second_unpressed">#E6E6E6</color>
+    <color name="minus">#FF0000</color>
+    <color name="plus">#0000FF</color>
+    <dimen name="activity_horizontal_margin">16dp</dimen>
+    <dimen name="activity_vertical_margin">16dp</dimen>
+    <string name="action_settings">設定</string>
+    <string name="addString">項目を追加</string>
+    <string name="app_name">Wallet Log</string>
+    <string name="dayjump">選んだ日付まで移動</string>
+    <string name="dialog_number">個数</string>
+    <string name="hello_world">Hello world!</string>
+    <string name="initial_font_size">18</string>
+    <string name="initial_unit_string">円</string>
+    <string name="item">品目</string>
+    <string name="item_number_color">#088A68</string>
+    <string name="minus">-</string>
+    <string name="one">1</string>
+    <string name="plus">+</string>
+    <string name="printItem">品目</string>
+    <string name="printPrice">価格</string>
+    <string name="printYen">価格</string>
+    <string name="save">記録</string>
+    <string name="times">×</string>
+    <string name="title_activity_diary">Wallet Log</string>
+    <string name="title_activity_preferences">設定</string>
+    <string name="total_price">合計価格</string>
+    <string name="txtItem">品目名</string>
+    <string name="txtPrice">価格</string>
+    <string name="yen">円</string>
+    <style name="AppBaseTheme" parent="android:Theme.Light">
+        <!--
+            Theme customizations available in newer API levels can go in
+            res/values-vXX/styles.xml, while customizations related to
+            backward-compatibility can go here.
+        -->
+    </style>
+    <style name="AppTheme" parent="AppBaseTheme">
+        <!-- All customizations that are NOT specific to a particular API-level can go here. -->
+    </style>
+</resources>
