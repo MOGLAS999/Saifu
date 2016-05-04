@@ -64,8 +64,8 @@ public class MySQLiteAdapter {
 					"name text,"+
 					"price integer,"+
 					"number integer,"+
-					"category integer"+
-					"sequence integer"+
+					"category integer,"+
+					"sequence integer not null"+
 					");"
 			);
 		}
@@ -201,13 +201,13 @@ public class MySQLiteAdapter {
 		
 		Cursor c = db.query(ITEM_TABLE_NAME, 
 				new String[] {"date", "name", "price", "number", "category", "sequence"},
-				"date == '" + dc.ChangeToString(date) + "'", null, null, null, "sequence ASC");
+				"date = '" + dc.ChangeToString(date) + "'", null, null, null, "sequence ASC");
 		
 		boolean isEOF = c.moveToFirst();
 		while (isEOF) {
 			itemList.add(new ItemData(c.getString(1), c.getInt(2), c.getString(0), 
 					c.getInt(3), c.getInt(4)));
-		    isEOF = c.moveToNext();
+			isEOF = c.moveToNext();
 		}
 		c.close();
 		

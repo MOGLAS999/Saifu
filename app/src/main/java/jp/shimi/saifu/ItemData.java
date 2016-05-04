@@ -6,7 +6,7 @@ public class ItemData{
 	private String item;
 	private int price;
 	private Calendar date;
-	private int number; // 個数
+	private int number; // 個数 TODO:quantity等に変更すべき？
 	private int category;
 	private DateChanger dc;
 	
