@@ -19,7 +19,7 @@ public class MySQLiteAdapter {
 	static final private String DB_NAME = "Saifu.db";
 	static final private String DAY_TABLE_NAME = "day_table";
 	static final private String ITEM_TABLE_NAME = "item_table";
-	static final private int DB_VERSION = 3;
+	static final private int DB_VERSION = 4;
 	
 	Context context;
 	MySQLiteOpenHelper DBHelper;
@@ -78,17 +78,7 @@ public class MySQLiteAdapter {
 							 " add sequence integer default 0;"
 							 );
 				 }
-				 
-				 /*if(oldVersion == 2){
-					 db.execSQL("alter table " + ITEM_TABLE_NAME +
-							 " drop column order;"
-							 );
-				 }*/
 			}
-			
-			//db.execSQL("drop table " + DAY_TABLE_NAME);
-			//db.execSQL("drop table " + ITEM_TABLE_NAME);
-	        //onCreate(db);
 		}
 	}
 	

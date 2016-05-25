@@ -2,25 +2,25 @@
 <items version="2" >
 
     <item
-        jar="C:\Users\Tak\AppData\Local\Android\sdk3\extras\android\m2repository\com\android\support\support-v4\18.0.0\support-v4-18.0.0.jar"
+        jar="C:\Users\gerog\AppData\Local\Android\sdk\extras\android\m2repository\com\android\support\support-v4\18.0.0\support-v4-18.0.0.jar"
         jumboMode="true"
         revision="23.0.1"
         sha1="44ec51e9d395a47aab135e5e1b556c0007442156">
-        <dex dex="C:\Users\Tak\AndroidStudioProjects\Saufu\app\build\intermediates\transforms\dex\debug\folders\1000\10\support-v4-18.0.0_fedccd98d655c755779f420cca9e19704bf6d822\classes.dex" />
+        <dex dex="C:\Users\gerog\AndroidStudioProjects\Saufu\app\build\intermediates\transforms\dex\debug\folders\1000\10\support-v4-18.0.0_24b3ed933c9ca783dce24c0418b5da333b57c606\classes.dex" />
     </item>
     <item
-        jar="C:\Users\Tak\AndroidStudioProjects\Saufu\app\build\intermediates\incremental-classes\debug\instant-run-bootstrap.jar"
+        jar="C:\Users\gerog\AndroidStudioProjects\Saufu\app\build\intermediates\incremental-classes\debug\instant-run-bootstrap.jar"
         jumboMode="true"
         revision="23.0.1"
-        sha1="f832b2e1f6a7106db51a2ac37666f2867c9741a4">
-        <dex dex="C:\Users\Tak\AndroidStudioProjects\Saufu\app\build\intermediates\transforms\dex\debug\folders\1000\10\instant-run-bootstrap_f742d5e5b76cd3d1f21ce6e310eee0bd111574e0\classes.dex" />
+        sha1="47977fb7e76de12071f040c1e90c2dc6ae69bfb3">
+        <dex dex="C:\Users\gerog\AndroidStudioProjects\Saufu\app\build\intermediates\transforms\dex\debug\folders\1000\10\instant-run-bootstrap_580e5f5c4cf72681feaa470f078b456012fb29db\classes.dex" />
     </item>
     <item
-        jar="C:\Users\Tak\AndroidStudioProjects\Saufu\app\build\intermediates\incremental-runtime-classes\debug\instant-run.jar"
+        jar="C:\Users\gerog\AndroidStudioProjects\Saufu\app\build\intermediates\incremental-runtime-classes\debug\instant-run.jar"
         jumboMode="true"
         revision="23.0.1"
-        sha1="6a62da42841e42a383626ec39212ba58c3402b69">
-        <dex dex="C:\Users\Tak\AndroidStudioProjects\Saufu\app\build\intermediates\transforms\dex\debug\folders\1000\10\instant-run_4ec4f11f66db04e051ec32c163386fff36d908fe\classes.dex" />
+        sha1="bec6cfb26d687304165d39da5d917635f32bf77e">
+        <dex dex="C:\Users\gerog\AndroidStudioProjects\Saufu\app\build\intermediates\transforms\dex\debug\folders\1000\10\instant-run_7225bbc3c1808520fbf973d936b45db94095c4ad\classes.dex" />
     </item>
 
 </items>

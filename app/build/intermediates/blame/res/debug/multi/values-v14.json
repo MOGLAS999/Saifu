@@ -1,6 +1,6 @@
 [
     {
-        "outputFile": "C:\\Users\\Tak\\AndroidStudioProjects\\Saufu\\app\\build\\intermediates\\res\\merged\\debug\\values-v14\\values-v14.xml",
+        "outputFile": "C:\\Users\\gerog\\AndroidStudioProjects\\Saufu\\app\\build\\intermediates\\res\\merged\\debug\\values-v14\\values-v14.xml",
         "map": [
             {
                 "to": {
@@ -12,7 +12,7 @@
                     "endOffset": 201
                 },
                 "from": {
-                    "file": "C:\\Users\\Tak\\AndroidStudioProjects\\Saufu\\app\\src\\main\\res\\values-v14\\styles.xml",
+                    "file": "C:\\Users\\gerog\\AndroidStudioProjects\\Saufu\\app\\src\\main\\res\\values-v14\\styles.xml",
                     "position": {
                         "startLine": 7,
                         "startColumn": 4,

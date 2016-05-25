@@ -87,6 +87,23 @@ ItemAdapter.MoveItemListener, CheckNameDialogFragment.ClickedNamePositiveButtonL
 		adapter.setMoveItemListener(this);
 		listView.setAdapter(adapter);
 	}
+
+	/*
+	* 最新の(listSize)件分を表示する。
+	* listSize:表示する件数
+	**/
+	private void UpdateListView(int listSize){
+		int startPos = (lDay.GetListSize() <= listSize)? 0 : lDay.GetListSize() - listSize - 1;
+		int endPos = lDay.GetListSize() - 1;
+		UpdateListView(startPos, endPos);
+	}
+
+	private void UpdateListView(int startPos, int endPos){
+		DayAdapter adapter = new DayAdapter(Diary.this, 0, lDay.GetList().subList(startPos, endPos));
+		adapter.setDayAdapterListener(this);
+		adapter.setMoveItemListener(this);
+		listView.setAdapter(adapter);
+	}
 	
 	//　listViewの表示をlDayの状態と同期し、positionの項目までスクロールする
 	private void UpdateListViewAndScroll(int position){
