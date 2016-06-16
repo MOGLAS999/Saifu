@@ -8,29 +8,23 @@ import android.util.Log;
 
 /**
  * 日ごとのデータ
- * @param date 日付
- * @param　itemList 項目のリスト
- * @param balance 残金
  */
 public class DayData{
 	private Calendar date;
 	private List<ItemData> itemList;
 	private int balance;
-	private DateChanger dc;
 	
 	public DayData(){
 		this.date = Calendar.getInstance();
-		this.date.setTime(dc.ChangeToDate("2000/01/01"));
+		this.date.setTime(DateChanger.ChangeToDate("2000/01/01"));
 		this.itemList = new ArrayList<ItemData>();
 		this.balance = 0;
-		this.dc = new DateChanger();
 	}
 	
 	public DayData(Calendar date, int balance){
 		this.date = date;
 		this.itemList = new ArrayList<ItemData>();
 		this.balance = balance;
-		this.dc = new DateChanger();
 	}
 
 	public Calendar GetDate(){
@@ -54,7 +48,7 @@ public class DayData{
 	}
 	
 	public String GetStringDate(){
-		return dc.ChangeToString(this.date);
+		return DateChanger.ChangeToString(this.date);
 	}
 	
 	public String GetStringBalance(){

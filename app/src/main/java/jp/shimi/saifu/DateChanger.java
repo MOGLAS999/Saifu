@@ -6,33 +6,34 @@ import java.util.Date;
 
 import android.util.Log;
 
+/**
+ * 日付と文字列を相互に変換するためのユーティリティクラス
+ */
 public class DateChanger {
-	private final SimpleDateFormat df = new SimpleDateFormat("yyyy/MM/dd");
+	private static final SimpleDateFormat YYYYMMDD = new SimpleDateFormat("yyyy/MM/dd");
+
+	private DateChanger(){};
 	
-	/*public DateChanger(){
-		this.df = new SimpleDateFormat("yyyy/MM/dd");
-	}*/
-	
-	public String ChangeToString(Date cDate){
-		return this.df.format(cDate);
+	public static String ChangeToString(Date dateDate){
+		return YYYYMMDD.format(dateDate);
 	}
 	
-	public String ChangeToString(Calendar cDate){
-		return this.df.format(cDate.getTime());
+	public static String ChangeToString(Calendar calenderDate){
+		return YYYYMMDD.format(calenderDate.getTime());
 	}
 	
-	public Date ChangeToDate(String sDate){
+	public static Date ChangeToDate(String stringDate){
 		try{
-			return this.df.parse(sDate);
+			return YYYYMMDD.parse(stringDate);
 		} catch (java.text.ParseException e) {
-			Log.d("PerseError", sDate);
+			Log.d("ParseError", stringDate);
 			return null;
 		}
 	}
 	
-	public Calendar ChangeToCalendar(String sDate){
+	public static Calendar ChangeToCalendar(String stringDate){
 		Calendar cal = Calendar.getInstance();
-		Date d = ChangeToDate(sDate);
+		Date d = ChangeToDate(stringDate);
 		if(d == null){
 			return null;
 		}else{

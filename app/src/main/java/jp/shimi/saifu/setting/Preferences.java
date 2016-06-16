@@ -30,14 +30,14 @@ public class Preferences extends PreferenceActivity{
 	public boolean onOptionsItemSelected(MenuItem item){
 		switch(item.getItemId()){
 			case android.R.id.home:
-				onDestory();
+				onDestroy();
 				return true;
 			default:
 				return super.onOptionsItemSelected(item);
 		}
 	}
 	
-	public void onDestory(){
+	public void onDestroy(){
 		super.onDestroy();
 		Intent intent = new Intent(this, Diary.class);
 		intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);

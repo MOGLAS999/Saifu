@@ -60,11 +60,10 @@ public class EditItemDialog implements DialogListener{
 		// アイテム編集ダイアログを生成     
 		if(((Activity)context).getFragmentManager().findFragmentByTag("edit_item_dialog") == null){
 			EditItemDialogFragment newFragment;
-			DateChanger dc = new DateChanger();
 			if(this.editPosition == -1){
-				newFragment = EditItemDialogFragment.newInstance(dc.ChangeToString(this.initDate));
+				newFragment = EditItemDialogFragment.newInstance(DateChanger.ChangeToString(this.initDate));
 			}else{
-				newFragment = EditItemDialogFragment.newInstance(dc.ChangeToString(this.initDate),
+				newFragment = EditItemDialogFragment.newInstance(DateChanger.ChangeToString(this.initDate),
 						this.editPosition, this.itemName, this.itemPrice, 
 						this.itemNumber, this.itemCategory);
 			}

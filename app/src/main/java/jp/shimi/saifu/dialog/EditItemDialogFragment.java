@@ -75,10 +75,9 @@ implements SelectCategoryDialogFragment.SelectedCategoryListener{
         if(editPosition >= 0) title = "項目の編集";
         builder.setTitle(title);
         builder.setView(layout);
-	    
-        final DateChanger dc = new DateChanger();
+
 		Calendar initDate = Calendar.getInstance();
-		initDate.setTime(dc.ChangeToDate(getArguments().getString("init_date"))); 
+		initDate.setTime(DateChanger.ChangeToDate(getArguments().getString("init_date")));
         final Calendar dCalendar = initDate;
         
         final EditText editItem = (EditText)layout.findViewById(R.id.editDialogItem);
@@ -149,7 +148,7 @@ implements SelectCategoryDialogFragment.SelectedCategoryListener{
         	}
         });
         
-        editDate.setText(dc.ChangeToString(dCalendar.getTime()));
+        editDate.setText(DateChanger.ChangeToString(dCalendar.getTime()));
         editDate.setOnClickListener(new OnClickListener(){
 			@Override
 			public void onClick(View v) {
@@ -159,7 +158,7 @@ implements SelectCategoryDialogFragment.SelectedCategoryListener{
 						dCalendar.set(Calendar.YEAR, year);
 						dCalendar.set(Calendar.MONTH, monthOfYear);
 						dCalendar.set(Calendar.DAY_OF_MONTH, dayOfMonth);
-						editDate.setText(dc.ChangeToString(dCalendar.getTime()));
+						editDate.setText(DateChanger.ChangeToString(dCalendar.getTime()));
 					}
 				};
 				
@@ -274,7 +273,7 @@ implements SelectCategoryDialogFragment.SelectedCategoryListener{
 		            			Diary callingActivity = (Diary)getActivity();
 		            			// 何故かinitDateがdateEdit.getText().toString()に置き換わっているので新しく取り直す
 		            			Calendar initDate = Calendar.getInstance();
-		            			initDate.setTime(dc.ChangeToDate(getArguments().getString("init_date"))); 
+		            			initDate.setTime(DateChanger.ChangeToDate(getArguments().getString("init_date")));
 		            			callingActivity.onReturnValue(itemData, initDate, editPosition);  
 		            		
 		            			listener.doPositiveClick();

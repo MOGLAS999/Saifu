@@ -274,9 +274,8 @@ ItemAdapter.MoveItemListener, CheckNameDialogFragment.ClickedNamePositiveButtonL
 	
 	public void DeleteDayDataFromDB(Calendar date){
 		MySQLiteAdapter dbAdapter = new MySQLiteAdapter(this);
-		DateChanger dc = new DateChanger();
 		
-		dbAdapter.deleteDayData(dc.ChangeToString(date));
+		dbAdapter.deleteDayData(DateChanger.ChangeToString(date));
 	}
 	
 	public void DeleteItemDataFromDB(ItemData itemData, int sequence){

@@ -3,49 +3,59 @@ package jp.shimi.saifu;
 import java.util.Calendar;
 
 public class ItemData{
-	private String item;
+	private int id;
+	private String name;
 	private int price;
 	private Calendar date;
 	private int number; // 個数 TODO:quantity等に変更すべき？
 	private int category;
-	private DateChanger dc;
+	private int walletId;
+	private int reverseItemId;
 	
 	public ItemData(){
-		this.item = "";
+		this.id = -1;
+		this.name = "";
 		this.price = 0;
 		this.date = Calendar.getInstance();
-		this.date.setTime(dc.ChangeToDate("2000/01/01"));
+		this.date.setTime(DateChanger.ChangeToDate("2000/01/01"));
 		this.number = 1;
 		this.category = 0;
-		this.dc = new DateChanger();
+		this.walletId = -1;
+		this.reverseItemId = -1;
 	}
 	
-	public ItemData(String item, int price, String date, int number, int category){
-		this.item = item;
-		this.price = price;
-		this.number = number;
-		this.category = category;
-		
-		this.dc = new DateChanger();
-		this.date = Calendar.getInstance();
-		if(dc.ChangeToDate(date) == null){
-			this.date.setTime(dc.ChangeToDate("2000/01/01"));
-		}
-		else{
-			this.date.setTime(dc.ChangeToDate(date));
-		}
+	public ItemData(int id, String name, int price, String date, int number, int category, int walletId, int reverseItemId){
+		this(id, name, price, DateChanger.ChangeToCalendar(date), number, category, walletId, reverseItemId);
 	}
 	
-	public ItemData(String item, int price, Calendar date, int number, int category){
-		this.item = item;
+	public ItemData(int id, String name, int price, Calendar date, int number, int category, int walletId){
+		this.id = id;
+		this.name = name;
 		this.price = price;
 		this.date = date;
 		this.number = number;
 		this.category = category;
+		this.walletId = walletId;
+		this.reverseItemId = -1;
 	}
+
+	public ItemData(int id, String name, int price, Calendar date, int number, int category, int walletId, int reverseItemId) {
+		this.id = id;
+		this.name = name;
+		this.price = price;
+		this.date = date;
+		this.number = number;
+		this.category = category;
+		this.walletId = walletId;
+		this.reverseItemId = reverseItemId;
+	}
+
+    public int GetId(){
+        return this.id;
+    }
 	
-	public String GetItem(){
-		return this.item;
+	public String GetName(){
+		return this.name;
 	}
 	
 	public int GetPrice(){
@@ -57,7 +67,7 @@ public class ItemData{
 	}
 	
 	public String GetStringDate(){
-		return dc.ChangeToString(this.date);
+		return DateChanger.ChangeToString(this.date);
 	}
 	
 	public int GetNumber(){
@@ -71,5 +81,9 @@ public class ItemData{
 	public int GetCategory(){
 		return this.category;
 	}
+
+    public int GetWalletId(){ return this.walletId; }
+
+    public int GetReverseItemId(){ return this.reverseItemId; }
 
 }

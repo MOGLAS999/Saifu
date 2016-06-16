@@ -100,10 +100,9 @@ public class DayList {
 	
 	// 指定した日付のデータの位置を返す
 	public int GetDataPositionByDate(Calendar date){
-		DateChanger dc = new DateChanger();
 		for(int i = 0; i < this.dataList.size(); i++){
 			//Log.d("GetDayData", dc.ChangeToString(this.dataList.get(i).GetDate()) +"=?"+ dc.ChangeToString(date));
-			if(dc.ChangeToString(this.dataList.get(i).GetDate()).equals(dc.ChangeToString(date))){
+			if(DateChanger.ChangeToString(this.dataList.get(i).GetDate()).equals(DateChanger.ChangeToString(date))){
 				//Log.d("Check", "if pass");
 				return i;
 			}

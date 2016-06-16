@@ -19,6 +19,7 @@ public class MySQLiteAdapter {
 	static final private String DB_NAME = "Saifu.db";
 	static final private String DAY_TABLE_NAME = "day_table";
 	static final private String ITEM_TABLE_NAME = "item_table";
+	static final private String WALLET_TABLE_NAME = "wallet_table";
 	static final private int DB_VERSION = 4;
 	
 	Context context;
@@ -52,20 +53,33 @@ public class MySQLiteAdapter {
 
 		@Override
 		public void onCreate(SQLiteDatabase db) {
+			final String COMMA = ",";
+
 			db.execSQL("create table " + DAY_TABLE_NAME +"(" +
-					"date text not null," +
+					"date text primary key" + COMMA +
 					"balance integer" +
 					//"difference integer not null" +
 					");"
 			);
+			// TODO:DayはItemTableから生成できるので、後々不要になるかもしれない
 			
 			db.execSQL("create table " + ITEM_TABLE_NAME +"(" +
-					"date text not null,"+
-					"name text,"+
-					"price integer,"+
-					"number integer,"+
-					"category integer,"+
-					"sequence integer not null"+
+					"id integer primary key autoincrement"+ COMMA +
+					"name text not null"+ COMMA +
+					"price integer not null"+ COMMA +
+					"date text not null"+ COMMA +
+					"number integer"+ COMMA +
+					"category integer"+ COMMA +
+					"sequence integer not null"+ COMMA +
+					"walletId integer not null"+ COMMA +
+					"reverseItemId integer"+ // 反転関係にあるアイテム(例：現金で電子マネーをチャージするなど)
+					");"
+			);
+
+			db.execSQL("create table " + WALLET_TABLE_NAME +"(" +
+					"id integer primary key autoincrement"+ COMMA +
+					"name text" + //COMMA +
+					//"currency text"+
 					");"
 			);
 		}
@@ -91,13 +105,16 @@ public class MySQLiteAdapter {
 	}
 	
 	public ContentValues getItemDataContentValues(ItemData itemData, int sequence){
-		ContentValues values = new ContentValues();  
-        values.put("date", itemData.GetStringDate());  
-        values.put("name", itemData.GetItem());
+		ContentValues values = new ContentValues();
+		values.put("id", itemData.GetId());
+        values.put("name", itemData.GetName());
         values.put("price", itemData.GetPrice());
-        values.put("number", itemData.GetNumber());
+		values.put("date", itemData.GetStringDate());
+		values.put("number", itemData.GetNumber());
         values.put("category", itemData.GetCategory());
         values.put("sequence", sequence);
+		values.put("walletId", itemData.GetWalletId());
+		values.put("reverseItemId", itemData.GetReverseItemId());
         
         return values;
 	}
@@ -169,15 +186,13 @@ public class MySQLiteAdapter {
 	
 	public DayList loadDayData(){
 		DayList dayList = new DayList();
-		DateChanger dc = new DateChanger();
-		
-		dayList = new DayList();
+
 		Cursor c = db.query(DAY_TABLE_NAME, new String[] {"date", "balance"},
 				null, null, null, null, "date ASC");
 		
 		boolean isEOF = c.moveToFirst();
 		while (isEOF) {
-			dayList.AddData(new DayData(dc.ChangeToCalendar(c.getString(0)), c.getInt(1)));
+			dayList.AddData(new DayData(DateChanger.ChangeToCalendar(c.getString(0)), c.getInt(1)));
 		    isEOF = c.moveToNext();
 		}
 		c.close();
@@ -187,16 +202,15 @@ public class MySQLiteAdapter {
 	
 	public List<ItemData> loadItemData(Calendar date){
 		List<ItemData> itemList = new ArrayList<ItemData>();
-		DateChanger dc = new DateChanger();
-		
+
 		Cursor c = db.query(ITEM_TABLE_NAME, 
-				new String[] {"date", "name", "price", "number", "category", "sequence"},
-				"date = '" + dc.ChangeToString(date) + "'", null, null, null, "sequence ASC");
+				new String[] {"id", "name", "price", "date", "number", "category", "sequence", "walletId", "reverseItemId"},
+				"date = '" + DateChanger.ChangeToString(date) + "'", null, null, null, "sequence ASC");
 		
 		boolean isEOF = c.moveToFirst();
 		while (isEOF) {
-			itemList.add(new ItemData(c.getString(1), c.getInt(2), c.getString(0), 
-					c.getInt(3), c.getInt(4)));
+			itemList.add(new ItemData(c.getInt(0), c.getString(1), c.getInt(2), c.getString(3), c.getInt(4),
+					c.getInt(5), c.getInt(7), c.getInt(8)));
 			isEOF = c.moveToNext();
 		}
 		c.close();
@@ -220,12 +234,15 @@ public class MySQLiteAdapter {
 		for(int i = 0; i < dayData.GetItemSize(); i++){
 			ItemData item = dayData.GetItemList().get(i);
 			ContentValues values = new ContentValues();
-			values.put("date", item.GetStringDate());
-			values.put("name", item.GetItem());
+			values.put("id", item.GetId());
+			values.put("name", item.GetName());
 			values.put("price", item.GetPrice());
+			values.put("date", item.GetStringDate());
 			values.put("number", item.GetNumber());
 			values.put("category", item.GetCategory());
 			values.put("sequence", i);
+			values.put("walletId", item.GetWalletId());
+			values.put("reverseItemId", item.GetReverseItemId());
 			db.insert(ITEM_TABLE_NAME, null, values);
 		}
 	}
