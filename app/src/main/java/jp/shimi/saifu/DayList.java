@@ -16,52 +16,52 @@ public class DayList {
 		this.dataList = dataList;
 	}
 	
-	public List<DayData> GetList(){
+	public List<DayData> getList(){
 		return this.dataList;
 	}
 	
 	// 末尾にデータを追加
-	public void AddData(DayData dd){
+	public void addData(DayData dd){
 		this.dataList.add(dd);
-		UpdateBalance(GetListSize()-1);
+		UpdateBalance(getListSize()-1);
 	}
 	
 	// 指定した位置にデータを追加
-	public void AddData(int index, DayData dd){
+	public void addData(int index, DayData dd){
 		this.dataList.add(index, dd);
 		UpdateBalance(index);
 	}
 	
 	// 日付に基づいた位置にデータを追加
-	public void AddDataByDate(DayData dd){
+	public void addDataByDate(DayData dd){
 		for(int i = 0; i < this.dataList.size(); i++){
-			if(dd.GetDate().compareTo(this.GetData(i).GetDate()) < 0){
+			if(dd.getDate().compareTo(this.getData(i).getDate()) < 0){
 				this.dataList.add(i, dd);
 				UpdateBalance(i);
 				return;
 			}
 		}
-		this.AddData(dd);
-		UpdateBalance(GetListSize()-1);
+		this.addData(dd);
+		UpdateBalance(getListSize()-1);
 	}	
 	
 	// 末尾にリストをデータとして追加
-	public void AddList(DayList addList){
+	public void addList(DayList addList){
 		this.dataList.addAll(addList.dataList);
 	}
 		
 	// 指定した位置にリストをデータとして追加
-	public void AddList(int index, DayList addList){
+	public void addList(int index, DayList addList){
 		this.dataList.addAll(index, addList.dataList);
 	}
 		
 	// 指定した位置にデータを上書き
-	public void SetData(int index, DayData newData){
+	public void setData(int index, DayData newData){
 		this.dataList.set(index, newData);
 	}
 	
 	// 指定した位置のデータを削除
-	public void RemoveData(int index){
+	public void removeData(int index){
 		this.dataList.remove(index);
 		UpdateBalance(index);
 	}
@@ -72,15 +72,15 @@ public class DayList {
 	}
 		
 	// 指定した位置のデータを返す
-	public DayData GetData(int index){
-		if(index < 0 || index >= this.GetListSize())
+	public DayData getData(int index){
+		if(index < 0 || index >= this.getListSize())
 			return null;
 		return this.dataList.get(index);
 		
 	}
 	
-	public DayData GetData(Calendar date){
-		int pos = GetDataPositionByDate(date);
+	public DayData getData(Calendar date){
+		int pos = getDataPositionByDate(date);
 		if(pos == -1){
 			return null;
 		}else{
@@ -89,20 +89,20 @@ public class DayList {
 	}
 	
 	// データの個数を返す
-	public int GetListSize(){
+	public int getListSize(){
 		return this.dataList.size();
 	}
 	
 	// 指定した位置のデータの持つアイテムの数を返す
-	public int GetItemListSize(int index){
-		return this.GetData(index).GetItemList().size();
+	public int getItemListSize(int index){
+		return this.getData(index).getItemList().size();
 	}
 	
 	// 指定した日付のデータの位置を返す
-	public int GetDataPositionByDate(Calendar date){
+	public int getDataPositionByDate(Calendar date){
 		for(int i = 0; i < this.dataList.size(); i++){
-			//Log.d("GetDayData", dc.ChangeToString(this.dataList.get(i).GetDate()) +"=?"+ dc.ChangeToString(date));
-			if(DateChanger.ChangeToString(this.dataList.get(i).GetDate()).equals(DateChanger.ChangeToString(date))){
+			//Log.d("getDayData", dc.ChangetoString(this.dataList.get(i).getDate()) +"=?"+ dc.ChangetoString(date));
+			if(DateChanger.ChangeToString(this.dataList.get(i).getDate()).equals(DateChanger.ChangeToString(date))){
 				//Log.d("Check", "if pass");
 				return i;
 			}
@@ -113,7 +113,7 @@ public class DayList {
 	// 指定した日データの日付のデータを上書き
 	public void UpdateData(DayData newData){
 		for(int i = 0; i < this.dataList.size(); i++){
-			if(this.dataList.get(i).GetDate() == newData.GetDate()){
+			if(this.dataList.get(i).getDate() == newData.getDate()){
 				this.dataList.set(i, newData);
 				UpdateBalance(i);
 			}
@@ -121,65 +121,65 @@ public class DayList {
 	}
 	
 	// 指定した日にアイテムデータを追加する
-	public void AddItemData(Calendar date, ItemData newItem){
-		int pos = GetDataPositionByDate(date);
+	public void addItemData(Calendar date, ItemData newItem){
+		int pos = getDataPositionByDate(date);
 		if(pos < 0){
-			//Log.d("AddItemData", "Error pos == "+ pos);
+			//Log.d("addItemData", "Error pos == "+ pos);
 		}
 		else{
-			this.dataList.get(pos).AddItem(newItem);
+			this.dataList.get(pos).addItem(newItem);
 			UpdateBalance(pos);
 		}
 	}
 	
-	public void AddItemData(ItemData newItem){
-		int pos = GetDataPositionByDate(newItem.GetDate());
+	public void addItemData(ItemData newItem){
+		int pos = getDataPositionByDate(newItem.getDate());
 		if(pos < 0){
-			//Log.d("AddItemData", "Error pos == "+ pos);
+			//Log.d("addItemData", "Error pos == "+ pos);
 		}
 		else{
-			this.dataList.get(pos).AddItem(newItem);
+			this.dataList.get(pos).addItem(newItem);
 			UpdateBalance(pos);
 		}
 	}
 	
 	// 指定した日の指定した位置にアイテムデータを追加する
-	public void AddItemData(Calendar date, ItemData newItem, int position){
-		int pos = GetDataPositionByDate(date);
+	public void addItemData(Calendar date, ItemData newItem, int position){
+		int pos = getDataPositionByDate(date);
 		if(pos < 0){
-			//Log.d("AddItemData", "Error pos == "+ pos);
+			//Log.d("addItemData", "Error pos == "+ pos);
 		}
 		else{
-			this.dataList.get(pos).AddItem(newItem, position);
+			this.dataList.get(pos).addItem(newItem, position);
 			UpdateBalance(pos);
 		}
 	}
 	
 	// 指定した日にアイテムデータを上書きする
-	public void SetItemData(Calendar date, ItemData newItem, int itemPos){
-		int pos = GetDataPositionByDate(date);
+	public void setItemData(Calendar date, ItemData newItem, int itemPos){
+		int pos = getDataPositionByDate(date);
 		if(pos < 0){
-			//Log.d("AddItemData", "Error pos == "+ pos);
+			//Log.d("addItemData", "Error pos == "+ pos);
 		}
 		else{
-			this.dataList.get(pos).SetItem(itemPos, newItem);
+			this.dataList.get(pos).setItem(itemPos, newItem);
 			UpdateBalance(pos);
 		}
 	}
 	
 	// 指定した日にアイテムリストを上書きする
-	public void SetItemList(Calendar date, List<ItemData> itemList){
-		this.GetData(date).SetItemList(itemList);
+	public void setItemList(Calendar date, List<ItemData> itemList){
+		this.getData(date).setItemList(itemList);
 	}
 	
 	// 指定した日の指定した位置のアイテムデータを削除する
-	public void RemoveItemData(Calendar date, int itemPos){
-		int pos = GetDataPositionByDate(date);
+	public void removeItemData(Calendar date, int itemPos){
+		int pos = getDataPositionByDate(date);
 		if(pos < 0){
-			//Log.d("AddItemData", "Error pos == "+ pos);
+			//Log.d("addItemData", "Error pos == "+ pos);
 		}
 		else{
-			this.dataList.get(pos).RemoveItem(itemPos);
+			this.dataList.get(pos).removeItem(itemPos);
 			UpdateBalance(pos);
 		}
 	}
@@ -189,28 +189,28 @@ public class DayList {
 		if(index < 0){
 			//Log.d("UpdateBalance", "error");
 		}else{
-			for(int i = index; i < GetListSize(); i++){
+			for(int i = index; i < getListSize(); i++){
 				int balance;
 				if(i == 0) balance = 0;
-				else balance = GetData(i-1).GetBalance();
-				for(int j = 0; j < GetData(i).GetItemList().size(); j++){
-					balance += GetData(i).GetItemList().get(j).GetTotalPrice();
+				else balance = getData(i-1).getBalance();
+				for(int j = 0; j < getData(i).getItemList().size(); j++){
+					balance += getData(i).getItemList().get(j).getTotalPrice();
 				}
-				GetData(i).SetBalance(balance);
+				getData(i).setBalance(balance);
 			}
 		}
 	}
 	
 	public void UpdateBalance(Calendar changedDate){
-		UpdateBalance(GetDataPositionByDate(changedDate));
+		UpdateBalance(getDataPositionByDate(changedDate));
 	}
 	
 	// データのアイテムリストのサイズを確認し、サイズが0なら削除してそれ以降を再計算する
 	public void CheckItemListSize(){
 		int zeroPos = -1;
-		for(int i = 0; i < GetListSize(); i++){
-			if(GetItemListSize(i) <= 0){
-				RemoveData(i);
+		for(int i = 0; i < getListSize(); i++){
+			if(getItemListSize(i) <= 0){
+				removeData(i);
 				if(zeroPos == -1){
 					zeroPos = i;
 				}
@@ -220,49 +220,49 @@ public class DayList {
 	}
 	
 	// 指定した日付の次の日付を返す
-	public Calendar GetNextDate(Calendar date){
-		if(GetListSize() == 0) return null;
-		if(GetListSize() == 1) return GetData(0).GetDate();
-		for(int i = 1; i < GetListSize(); i++){
-			DayData d1 = GetData(i-1);
-			DayData d2 = GetData(i);
+	public Calendar getNextDate(Calendar date){
+		if(getListSize() == 0) return null;
+		if(getListSize() == 1) return getData(0).getDate();
+		for(int i = 1; i < getListSize(); i++){
+			DayData d1 = getData(i-1);
+			DayData d2 = getData(i);
 			
-			if(d1.GetDate().equals(date)){
-				return d2.GetDate();
+			if(d1.getDate().equals(date)){
+				return d2.getDate();
 			}
-			else if(d1.GetDate().before(date) && d2.GetDate().after(date)){
-				return d2.GetDate();
+			else if(d1.getDate().before(date) && d2.getDate().after(date)){
+				return d2.getDate();
 			}
 		}
-		return GetData(GetListSize()-1).GetDate();
+		return getData(getListSize()-1).getDate();
 	}
 	
 	// 指定した日付の前の日付を返す
-	public Calendar GetBeforeDate(Calendar date){
-		if(GetListSize() == 0) return null;
-		if(GetListSize() == 1) return GetData(0).GetDate();
-		for(int i = 1; i < GetListSize(); i++){
-			DayData d1 = GetData(i-1);
-			DayData d2 = GetData(i);
+	public Calendar getBeforeDate(Calendar date){
+		if(getListSize() == 0) return null;
+		if(getListSize() == 1) return getData(0).getDate();
+		for(int i = 1; i < getListSize(); i++){
+			DayData d1 = getData(i-1);
+			DayData d2 = getData(i);
 				
-			if(d2.GetDate().equals(date)){
-				return d1.GetDate();
+			if(d2.getDate().equals(date)){
+				return d1.getDate();
 			}
-			else if(d1.GetDate().before(date) && d2.GetDate().after(date)){
-				return d1.GetDate();
+			else if(d1.getDate().before(date) && d2.getDate().after(date)){
+				return d1.getDate();
 			}
 		}
-		return GetData(GetListSize() - 1).GetDate();
+		return getData(getListSize() - 1).getDate();
 	}
 	
-	// 指定した日に指定した名前のアイテムがあるかどうかを返す
-	public boolean ItemIsExist(Calendar date, String itemName){
-		DayData dd = GetData(date);
+	// 指定した日に指定したIDのアイテムがあるかどうかを返す
+	public boolean ItemIsExist(Calendar date, int itemId){
+		DayData dd = getData(date);
 		if(dd == null){
 			return false;
 		}
 		else{
-			if(dd.ItemIsExist(itemName)){
+			if(dd.itemIsExist(itemId)){
 				return true;
 			}
 			else return false;

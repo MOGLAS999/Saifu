@@ -2,7 +2,6 @@ package jp.shimi.saifu.dialog;
 
 import java.util.EventListener;
 
-import jp.shimi.saifu.parcelable.ItemDataParcelable;
 import jp.shimi.saifu.ItemData;
 import android.app.AlertDialog;
 import android.app.Dialog;
@@ -12,7 +11,7 @@ import android.content.DialogInterface.OnClickListener;
 import android.os.Bundle;
 
 public class CheckNameDialogFragment extends DialogFragment{
-	static ItemDataParcelable itemDataParcelable;
+	static ItemData itemDataParcelable;
 	private ClickedNamePositiveButtonListener positiveListener = null;
 	
 	public interface ClickedNamePositiveButtonListener extends EventListener{
@@ -23,14 +22,12 @@ public class CheckNameDialogFragment extends DialogFragment{
 			String positive, String negative, ItemData itemData, int editPosition){
 		CheckNameDialogFragment fragment = new CheckNameDialogFragment();
 
-		itemDataParcelable = new ItemDataParcelable(itemData);
-		
 		Bundle args = new Bundle();
 		args.putString("title", title);
 		args.putString("message", message);
 		args.putString("positive", positive);
 		args.putString("negative", negative);
-		args.putParcelable("item_data", itemDataParcelable);
+		args.putParcelable("item_data", itemData);
 		args.putInt("edit_position", editPosition);
 		
 		fragment.setArguments(args);
@@ -41,15 +38,13 @@ public class CheckNameDialogFragment extends DialogFragment{
 	public static CheckNameDialogFragment newInstance(String title, String message,
 			ItemData itemData, int editPosition){
 		CheckNameDialogFragment fragment = new CheckNameDialogFragment();
-
-		itemDataParcelable = new ItemDataParcelable(itemData);
 		
 		Bundle args = new Bundle();
 		args.putString("title", title);
 		args.putString("message", message);
 		args.putString("positive", "OK");
 		args.putString("negative", "Cancel");
-		args.putParcelable("item_data", itemDataParcelable);
+		args.putParcelable("item_data", itemData);
 		args.putInt("edit_position", editPosition);
 		
 		fragment.setArguments(args);
@@ -67,9 +62,8 @@ public class CheckNameDialogFragment extends DialogFragment{
         		new OnClickListener(){
 			@Override
 			public void onClick(DialogInterface dialog, int which) {
-				itemDataParcelable = getArguments().getParcelable("itemData");
-				positiveListener.ClickedNamePositiveButton(itemDataParcelable.GetItemData(), 
-						getArguments().getInt("edit_position"));
+				ItemData itemData = getArguments().getParcelable("itemData");
+				positiveListener.ClickedNamePositiveButton(itemData, getArguments().getInt("edit_position"));
 			}
         });
         builder.setNegativeButton(getArguments().getString("negative"), null);

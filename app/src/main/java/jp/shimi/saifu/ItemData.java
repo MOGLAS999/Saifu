@@ -1,8 +1,11 @@
 package jp.shimi.saifu;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 import java.util.Calendar;
 
-public class ItemData{
+public class ItemData implements Parcelable {
 	private int id;
 	private String name;
 	private int price;
@@ -50,40 +53,120 @@ public class ItemData{
 		this.reverseItemId = reverseItemId;
 	}
 
-    public int GetId(){
+    public int getId(){
         return this.id;
     }
-	
-	public String GetName(){
+
+	public ItemData setId(int id) {
+		this.id = id;
+		return this;
+	}
+
+	public String getName(){
 		return this.name;
 	}
+
+	public ItemData setName(String name) {
+		this.name = name;
+		return this;
+	}
 	
-	public int GetPrice(){
+	public int getPrice(){
 		return this.price;
 	}
-	
-	public Calendar GetDate(){
+
+	public ItemData setPrice(int price) {
+		this.price = price;
+		return this;
+	}
+
+	public Calendar getDate(){
 		return this.date;
 	}
-	
-	public String GetStringDate(){
+
+	public String getStringDate(){
 		return DateChanger.ChangeToString(this.date);
 	}
+
+	public ItemData setDate(Calendar date) {
+		this.date = date;
+		return this;
+	}
 	
-	public int GetNumber(){
+	public int getNumber(){
 		return this.number;
 	}
-	
-	public int GetTotalPrice(){
-		return this.price * this.number;
+
+	public ItemData setNumber(int number) {
+		this.number = number;
+		return this;
 	}
 	
-	public int GetCategory(){
+	public int getTotalPrice(){
+		return this.price * this.number;
+	}
+
+	public int getCategory(){
 		return this.category;
 	}
 
-    public int GetWalletId(){ return this.walletId; }
+	public ItemData setCategory(int category) {
+		this.category = category;
+		return this;
+	}
 
-    public int GetReverseItemId(){ return this.reverseItemId; }
+    public int getWalletId(){ return this.walletId; }
 
+	public ItemData setWalletId(int walletId) {
+		this.walletId = walletId;
+		return this;
+	}
+
+	public int getReverseItemId(){ return this.reverseItemId; }
+
+	public ItemData setReverseItemId(int reverseItemId) {
+		this.reverseItemId = reverseItemId;
+		return this;
+	}
+
+    /*************************Parcelable****************************/
+	@Override
+	public int describeContents() {
+		return 0;
+	}
+
+	@Override
+	public void writeToParcel(Parcel dest, int flags) {
+		dest.writeInt(this.id);
+		dest.writeString(this.name);
+		dest.writeInt(this.price);
+		dest.writeSerializable(this.date);
+		dest.writeInt(this.number);
+		dest.writeInt(this.category);
+		dest.writeInt(this.walletId);
+		dest.writeInt(this.reverseItemId);
+	}
+
+	protected ItemData(Parcel in) {
+		this.id = in.readInt();
+		this.name = in.readString();
+		this.price = in.readInt();
+		this.date = (Calendar) in.readSerializable();
+		this.number = in.readInt();
+		this.category = in.readInt();
+		this.walletId = in.readInt();
+		this.reverseItemId = in.readInt();
+	}
+
+	public static final Parcelable.Creator<ItemData> CREATOR = new Parcelable.Creator<ItemData>() {
+		@Override
+		public ItemData createFromParcel(Parcel source) {
+			return new ItemData(source);
+		}
+
+		@Override
+		public ItemData[] newArray(int size) {
+			return new ItemData[size];
+		}
+	};
 }

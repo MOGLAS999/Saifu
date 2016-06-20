@@ -27,96 +27,106 @@ public class DayData{
 		this.balance = balance;
 	}
 
-	public Calendar GetDate(){
+	public Calendar getDate(){
 		return this.date;
 	}
 	
-	public List<ItemData> GetItemList(){
+	public List<ItemData> getItemList(){
 		return this.itemList;
 	}
 	
-	public int GetBalance(){
+	public int getBalance(){
 		return this.balance;
 	}
 	
-	public int SetBalance(int balance){
+	public int setBalance(int balance){
 		return this.balance = balance;
 	}
 	
-	public void AddBalance(int price){
+	public void addBalance(int price){
 		this.balance += price;
 	}
 	
-	public String GetStringDate(){
+	public String getStringDate(){
 		return DateChanger.ChangeToString(this.date);
 	}
 	
-	public String GetStringBalance(){
+	public String getStringBalance(){
 		return Integer.toString(this.balance);
 	}
 	
-	public void AddItem(ItemData newItem){
+	public void addItem(ItemData newItem){
 		this.itemList.add(newItem);
 	}
 	
-	public void AddItem(ItemData newItem, int position){
+	public void addItem(ItemData newItem, int position){
 		this.itemList.add(position, newItem);
 	}
 	
-	public void SetItem(int index, ItemData newItem){
+	public void setItem(int index, ItemData newItem){
 		this.itemList.set(index, newItem);
 	}
 	
-	public void SetItemList(List<ItemData> itemList){
+	public void setItemList(List<ItemData> itemList){
 		this.itemList = itemList;
 	}
 	
-	public void RemoveItem(int index){
+	public void removeItem(int index){
 		this.itemList.remove(index);
 	}
 	
-	public int GetItemSize(){
+	public int getItemSize(){
 		return this.itemList.size();
 	}
 	
-	public int GetDifference(){
+	public int getDifference(){
 		int dif = 0;
 		for(int i = 0; i < this.itemList.size(); i++){
-			dif += this.itemList.get(i).GetPrice();
+			dif += this.itemList.get(i).getPrice();
 		}
 		return dif;
 	}
 	
-	public void ExchangeItemPosition(int pos1, int pos2){
+	public void exchangeItemPosition(int pos1, int pos2){
 		ItemData tmp = this.itemList.get(pos1);
 		this.itemList.set(pos1, this.itemList.get(pos2));
 		this.itemList.set(pos2, tmp);
 	}
 	
-	public void UpItemPosition(int position){
+	public void upItemPosition(int position){
 		if(this.itemList.size() > 1 && position > 0){
-			ExchangeItemPosition(position, position - 1);
+			exchangeItemPosition(position, position - 1);
 		}
 	}
 	
-	public void DownItemPosition(int position){
+	public void downItemPosition(int position){
 		if(this.itemList.size() > 1 && position < this.itemList.size() - 1){
-			ExchangeItemPosition(position, position + 1);
+			exchangeItemPosition(position, position + 1);
 		}
 	}
-	
-	public boolean ItemIsExist(String name){
+
+	// 名前で検索するのは危険
+	/*public boolean itemIsExist(String name){
 		for(int i = 0; i < this.itemList.size(); i++){
-			if(this.itemList.get(i).GetItem().equals(name)){
+			if(this.itemList.get(i).getName().equals(name)){
+				return true;
+			}
+		}
+		return false;
+	}*/
+
+	public boolean itemIsExist(int itemId){
+		for(int i = 0; i < this.itemList.size(); i++){
+			if(this.itemList.get(i).getId() == itemId){
 				return true;
 			}
 		}
 		return false;
 	}
 	
-	public void ShowListLog(){
+	public void showListLog(){
 		for(int i = 0; i < this.itemList.size(); i++){
-			Log.d("ShowListLog", i+":"+this.itemList.get(i).GetItem()+":"+this.itemList.get(i).GetPrice());
+			Log.d("ShowListLog", i+":"+this.itemList.get(i).getName()+":"+this.itemList.get(i).getPrice());
 		}
 	}
 

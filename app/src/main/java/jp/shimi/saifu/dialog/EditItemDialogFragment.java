@@ -30,34 +30,31 @@ public class EditItemDialogFragment extends DialogFragment
 implements SelectCategoryDialogFragment.SelectedCategoryListener{
 	LayoutInflater inflater;
 	private DialogListener listener = null;
-	
-	public static EditItemDialogFragment newInstance(String initDate) {
+
+	// アイテムの新規作成
+	// TODO:最新のIDを取得できるようにする
+	public static EditItemDialogFragment newInstance(Calendar initDate, int currentItemId) {
 		EditItemDialogFragment fragment = new EditItemDialogFragment();
 		  
 		// 引数を設定
 		Bundle args = new Bundle();
-		args.putString("init_date", initDate);
-		args.putInt("edit_position", -1);
-		args.putString("item_name", "");
-		args.putInt("item_price", 0);
-		args.putInt("item_number", 1);
-		args.putInt("item_category", 0);
+		ItemData itemData = new ItemData();
+		itemData.setDate(initDate);
+		args.putParcelable("itemData", itemData);
+		args.putInt("itemId", currentItemId + 1);
+		args.putInt("editPosition", -1);
 		fragment.setArguments(args);
 		 
 		return fragment;
 	} 
-	
-	public static EditItemDialogFragment newInstance(String initDate, int editPosition,
-			String itemName, int itemPrice, int itemNumber, int itemCategory) {
+
+	// アイテムの編集
+	public static EditItemDialogFragment newInstance(ItemData itemData, int editedItemPosition) {
 		EditItemDialogFragment fragment = new EditItemDialogFragment();
 		  
 		Bundle args = new Bundle();
-		args.putString("init_date", initDate);
-		args.putInt("edit_position", editPosition);
-		args.putString("item_name", itemName);
-		args.putInt("item_price", itemPrice);
-		args.putInt("item_number", itemNumber);
-		args.putInt("item_category", itemCategory);
+		args.putParcelable("ItemData", itemData);
+		args.putInt("EditPosition", editedItemPosition);
 		fragment.setArguments(args);
 		 
 		return fragment;
@@ -70,17 +67,20 @@ implements SelectCategoryDialogFragment.SelectedCategoryListener{
         		(ViewGroup)getActivity().findViewById(R.id.diarydialog_layout));
         
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-        final int editPosition = getArguments().getInt("edit_position");
+        final int editPosition = getArguments().getInt("EditPosition");
+		final ItemData initItemData = getArguments().getParcelable("ItemData");
+
         String title = "項目の追加";
         if(editPosition >= 0) title = "項目の編集";
         builder.setTitle(title);
         builder.setView(layout);
 
 		Calendar initDate = Calendar.getInstance();
-		initDate.setTime(DateChanger.ChangeToDate(getArguments().getString("init_date")));
+		initDate.setTime(initItemData.getDate().getTime());
         final Calendar dCalendar = initDate;
-        
-        final EditText editItem = (EditText)layout.findViewById(R.id.editDialogItem);
+
+		// コンポーネント読み込み
+        final EditText editName = (EditText)layout.findViewById(R.id.editDialogItem);
         final EditText editPrice = (EditText)layout.findViewById(R.id.editDialogPrice);
         final EditText editDate = (EditText)layout.findViewById(R.id.editDialogDate);
         final EditText editNumber = (EditText)layout.findViewById(R.id.editDialogNumber);
@@ -117,11 +117,11 @@ implements SelectCategoryDialogFragment.SelectedCategoryListener{
         
         // 編集の場合EditTextを元データで初期化する
         if(editPosition >= 0){        	
-        	int itemPrice = getArguments().getInt("item_price");
-        	int itemNumber = getArguments().getInt("item_number");
-        	int itemCategory = getArguments().getInt("item_category");
+        	int itemPrice = initItemData.getPrice();
+        	int itemNumber = initItemData.getNumber();
+        	int itemCategory = initItemData.getCategory();
         	
-        	editItem.setText(getArguments().getString("item_name"));    	
+        	editName.setText(initItemData.getName());
         	editPrice.setText(Integer.toString(Math.abs(itemPrice)));
         	editNumber.setText(Integer.toString(itemNumber));
         	btnCategory.setText(Integer.toString(itemCategory));
@@ -176,7 +176,7 @@ implements SelectCategoryDialogFragment.SelectedCategoryListener{
         final int plusColor = getActivity().getResources().getColor(R.color.plus);
         final int minusColor = getActivity().getResources().getColor(R.color.minus);
         plusMinusButton.setTextColor(minusColor);
-        if(editPosition >= 0 && getArguments().getInt("item_price") > 0){
+        if(editPosition >= 0 && initItemData.getPrice() > 0){
         	plusMinusButton.setText(getResources().getString(R.string.plus));
         	plusMinusButton.setTextColor(plusColor);
         }
@@ -211,15 +211,15 @@ implements SelectCategoryDialogFragment.SelectedCategoryListener{
 				positiveButton.setOnClickListener(new OnClickListener(){
 					@Override
 					public void onClick(View v) {
-		            	EditText etxtItem   = (EditText)layout.findViewById(R.id.editDialogItem);
+		            	EditText etxtName   = (EditText)layout.findViewById(R.id.editDialogItem);
 		            	EditText etxtPrice  = (EditText)layout.findViewById(R.id.editDialogPrice);
 		            	EditText etxtNumber = (EditText)layout.findViewById(R.id.editDialogNumber);
 		            	
 		            	String errorMessage = "";
-		            	if(etxtItem.getText().toString().equals("")){
+		            	if(etxtName.getText().toString().equals("")){
 		            		errorMessage += "項目名を入力してください。";
 		            	}
-		            	else if(etxtItem.getText().toString().equals("")){
+		            	else if(etxtName.getText().toString().equals("")){
 		            		errorMessage += "同じ日付に同名の項目は追加できません。";
 		            	}
 		            	if(etxtPrice.getText().toString().equals("")){
@@ -245,7 +245,7 @@ implements SelectCategoryDialogFragment.SelectedCategoryListener{
 		            	}
 		            	else{
 		            		// 入力内容を取得
-		            		String strItem   = etxtItem.getText().toString();
+		            		String strName   = etxtName.getText().toString();
 		            		String strPrice  = etxtPrice.getText().toString();
 		            		String strNumber = etxtNumber.getText().toString();
 		            		String strCategory = btnCategory.getText().toString();
@@ -260,20 +260,24 @@ implements SelectCategoryDialogFragment.SelectedCategoryListener{
 		            		if(category < 0) category = 0;
 		            		
 		            		// 項目を元のアクティビティに返す
-		            		ItemData itemData = new ItemData(strItem, price, editDate.getText().toString(),
-		            				number, category);
-		            		if(editPosition >= 0 && itemData == new ItemData(getArguments().getString("item_name"),
-		                			getArguments().getInt("item_price"),
-		                			getArguments().getString("init_date"),
-		                			getArguments().getInt("item_number"),
-		                			getArguments().getInt("item_category"))){
-		            			alertDialog.dismiss(); // ダイアログを閉じる
+		            		ItemData itemData = new ItemData(initItemData.getId(), strName, price, editDate.getText().toString(),
+		            				number, category, initItemData.getWalletId(), initItemData.getReverseItemId());
+		            		if(editPosition >= 0){
+								if(itemData.getName() == initItemData.getName() &&
+										itemData.getPrice() == initItemData.getPrice() &&
+										itemData.getDate() == initItemData.getDate() &&
+										itemData.getNumber() == initItemData.getNumber() &&
+										itemData.getCategory() == initItemData.getCategory() &&
+										itemData.getWalletId() == initItemData.getWalletId() &&
+										itemData.getReverseItemId() == initItemData.getReverseItemId()) {
+									alertDialog.dismiss(); // ダイアログを閉じる
+								}
 		            		}
 		            		else{
 		            			Diary callingActivity = (Diary)getActivity();
 		            			// 何故かinitDateがdateEdit.getText().toString()に置き換わっているので新しく取り直す
 		            			Calendar initDate = Calendar.getInstance();
-		            			initDate.setTime(DateChanger.ChangeToDate(getArguments().getString("init_date")));
+		            			initDate.setTime(DateChanger.ChangeToDate(getArguments().getString("***")));
 		            			callingActivity.onReturnValue(itemData, initDate, editPosition);  
 		            		
 		            			listener.doPositiveClick();

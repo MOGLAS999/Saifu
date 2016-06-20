@@ -63,7 +63,7 @@ public class DayAdapter extends ArrayAdapter<DayData>
     	
     	final DayData day = (DayData)getItem(position);
     	if(day != null){	        
-    		holder.textDate.setText(day.GetStringDate() + GetWeekByDate(day.GetDate()));
+    		holder.textDate.setText(day.getStringDate() + getWeekByDate(day.getDate()));
     		// 各日の日付部分がクリックされた時のイベント
     		holder.textDate.setOnClickListener(new View.OnClickListener() {
         		public void onClick(View view){            			
@@ -78,7 +78,7 @@ public class DayAdapter extends ArrayAdapter<DayData>
     		String initUnit = context.getResources().getString(R.string.initial_unit_string);
     		String unit = pref.getString("unit_string", initUnit);
     		
-    		holder.textBalance.setText("残金    " + day.GetStringBalance() + " " + unit);
+    		holder.textBalance.setText("残金    " + day.getStringBalance() + " " + unit);
     		
     		String initFontSize = context.getResources().getString(R.string.initial_font_size);
     		int textSize = Integer.parseInt(pref.getString("char_size", initFontSize));
@@ -89,7 +89,7 @@ public class DayAdapter extends ArrayAdapter<DayData>
     			holder.textBalance.setTextSize(textSize);
     		}
     		    	
-    		ItemAdapter adapter = new ItemAdapter(context, 0, day.GetItemList());
+    		ItemAdapter adapter = new ItemAdapter(context, 0, day.getItemList());
     		adapter.setItemRemoveListener(DayAdapter.this);
     		adapter.setMoveItemListener(DayAdapter.this);
     		
@@ -114,7 +114,7 @@ public class DayAdapter extends ArrayAdapter<DayData>
     	public void CreateDialog(){
     		// 編集・削除ダイアログを生成        			       			
 			DayMenuDialogFragment newFragment = 
-					DayMenuDialogFragment.newInstance(day.GetStringDate());
+					DayMenuDialogFragment.newInstance(day.getStringDate());
 			newFragment.setDialogListener(DayMenuDialog.this);
 			//newFragment.setCancelable(false);
 			newFragment.show(((Activity)context).getFragmentManager(), "day_menu_dialog");
@@ -122,7 +122,7 @@ public class DayAdapter extends ArrayAdapter<DayData>
     	
     	@Override
     	public void doFirstClick() {
-    		EditItemDialog dialog = new EditItemDialog(context, day.GetDate());
+    		EditItemDialog dialog = new EditItemDialog(context, day.getDate());
     		dialog.CreateDialog();
     	}
 
@@ -130,14 +130,14 @@ public class DayAdapter extends ArrayAdapter<DayData>
     	public void doSecondClick() {
     		//　削除確認ダイアログを表示
     		CheckDialogFragment newFragment;
-    		newFragment = CheckDialogFragment.newInstance("警告", day.GetStringDate()+"を削除しますか？");
+    		newFragment = CheckDialogFragment.newInstance("警告", day.getStringDate()+"を削除しますか？");
     		newFragment.setCheckDialogFragmentListener(DayMenuDialog.this);
     		newFragment.show(((Activity)context).getFragmentManager(), "check_day_delete_dialog");
     	}
 
 		@Override
 		public void ClickedPositiveButton() {
-			Calendar cal = day.GetDate();
+			Calendar cal = day.getDate();
     		remove(day);   
     		listener.onDayDeleted(cal);
 		}
@@ -167,7 +167,7 @@ public class DayAdapter extends ArrayAdapter<DayData>
 		listView.requestLayout();
 	}
     
-    public String GetWeekByDate(Calendar cal){
+    public String getWeekByDate(Calendar cal){
     	switch(cal.get(Calendar.DAY_OF_WEEK)){
     		case Calendar.SUNDAY:    return "(日)";
     		case Calendar.MONDAY:    return "(月)";

@@ -31,7 +31,7 @@ ItemAdapter.MoveItemListener, CheckNameDialogFragment.ClickedNamePositiveButtonL
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.diary);
 		
-		LoadDayDataFromDB();
+		LoaddayDataFromDB();
 		LoadItemDataFromDB();
 		
 		lDay.UpdateBalance(0);
@@ -42,13 +42,14 @@ ItemAdapter.MoveItemListener, CheckNameDialogFragment.ClickedNamePositiveButtonL
         listView = (ListView)findViewById(R.id.diaryListView);
         
         // 初期残金設定ダイアログ
-        if(lDay.GetListSize() == 0){
-        	EditItemDialog dialog = new EditItemDialog(this, Calendar.getInstance(), 0, "初期残金", 1, 1, 0);
+        if(lDay.getListSize() == 0){
+			// IDを与える
+        	EditItemDialog dialog = new EditItemDialog(this, new ItemData(0, "初期残金", 0, Calendar.getInstance(), 1, 1, -1, -1), 0);
 			dialog.CreateDialog();
         }
         
         // リストビューの表示
-        UpdateListViewAndScroll(lDay.GetListSize() - 1);
+        UpdateListViewAndScroll(lDay.getListSize() - 1);
 	}
 	
 	@Override
@@ -82,7 +83,7 @@ ItemAdapter.MoveItemListener, CheckNameDialogFragment.ClickedNamePositiveButtonL
 	}	
 	
 	private void UpdateListView(){
-		DayAdapter adapter = new DayAdapter(Diary.this, 0, lDay.GetList());
+		DayAdapter adapter = new DayAdapter(Diary.this, 0, lDay.getList());
 		adapter.setDayAdapterListener(this);
 		adapter.setMoveItemListener(this);
 		listView.setAdapter(adapter);
@@ -93,13 +94,13 @@ ItemAdapter.MoveItemListener, CheckNameDialogFragment.ClickedNamePositiveButtonL
 	* listSize:表示する件数
 	**/
 	private void UpdateListView(int listSize){
-		int startPos = (lDay.GetListSize() <= listSize)? 0 : lDay.GetListSize() - listSize - 1;
-		int endPos = lDay.GetListSize() - 1;
+		int startPos = (lDay.getListSize() <= listSize)? 0 : lDay.getListSize() - listSize - 1;
+		int endPos = lDay.getListSize() - 1;
 		UpdateListView(startPos, endPos);
 	}
 
 	private void UpdateListView(int startPos, int endPos){
-		DayAdapter adapter = new DayAdapter(Diary.this, 0, lDay.GetList().subList(startPos, endPos));
+		DayAdapter adapter = new DayAdapter(Diary.this, 0, lDay.getList().subList(startPos, endPos));
 		adapter.setDayAdapterListener(this);
 		adapter.setMoveItemListener(this);
 		listView.setAdapter(adapter);
@@ -139,17 +140,17 @@ ItemAdapter.MoveItemListener, CheckNameDialogFragment.ClickedNamePositiveButtonL
 	 * @param editPosition 
 	 */
 	public void onReturnValue(ItemData itemData, Calendar initDate, int editPosition){
-		int d = lDay.GetDataPositionByDate(itemData.GetDate());
+		int d = lDay.getDataPositionByDate(itemData.getDate());
 		if(d < 0){ 
-			DayData newDay = new DayData(itemData.GetDate(), 0);
-			lDay.AddDataByDate(newDay);
+			DayData newDay = new DayData(itemData.getDate(), 0);
+			lDay.addDataByDate(newDay);
 			InsertDayDataToDB(newDay);
-			Log.d("InsertDayData", newDay.GetStringDate()+" Passed");
+			Log.d("InsertDayData", newDay.getStringDate()+" Passed");
 		}
 		
-		/*if(lDay.ItemIsExist(itemData.GetDate(), itemData.GetItem())){
+		/*if(lDay.ItemIsExist(itemData.getDate(), itemData.getItem())){
 			String title = "警告";
-			String text = itemData.GetStringDate() + "には既に" + itemData.GetItem() + "が存在します。\n"
+			String text = itemData.getStringDate() + "には既に" + itemData.getItem() + "が存在します。\n"
 				+ "項目名を再編集してください。";
 			
 			CheckNameDialogFragment newFragment;
@@ -160,29 +161,29 @@ ItemAdapter.MoveItemListener, CheckNameDialogFragment.ClickedNamePositiveButtonL
 		//else{
 			if(editPosition >= 0){
 				// 編集モード
-				if(itemData.GetDate().equals(initDate)){
+				if(itemData.getDate().equals(initDate)){
 					//lDay.SetItemData(initDate, itemData, editPosition);
 					// 削除処理は各ArrayAdapterで行うので、追加のみ行う
-					if(editPosition + 1 == lDay.GetListSize()){
-						lDay.AddItemData(itemData.GetDate(), itemData);
+					if(editPosition + 1 == lDay.getListSize()){
+						lDay.addItemData(itemData.getDate(), itemData);
 					}else{
-						lDay.AddItemData(itemData.GetDate(), itemData, editPosition+1);
+						lDay.addItemData(itemData.getDate(), itemData, editPosition+1);
 					}
 				}else{
 					//lDay.RemoveItemData(initDate, editPosition);
-					lDay.AddItemData(itemData.GetDate(), itemData);
+					lDay.addItemData(itemData.getDate(), itemData);
 				}
 			}else{
-				lDay.AddItemData(itemData.GetDate(), itemData);
+				lDay.addItemData(itemData.getDate(), itemData);
 			}
 	
 			// 項目が編集された日にスクロールする
-			UpdateListViewAndScroll(lDay.GetDataPositionByDate(itemData.GetDate()));
+			UpdateListViewAndScroll(lDay.getDataPositionByDate(itemData.getDate()));
 		
-			if(!initDate.equals(itemData.GetDate()) && d >= 0){
-				UpdateDayDataToDB(lDay.GetData(initDate));
+			if(!initDate.equals(itemData.getDate()) && d >= 0){
+				UpdateDayDataToDB(lDay.getData(initDate));
 			}
-			UpdateDayDataToDB(lDay.GetData(itemData.GetDate()));
+			UpdateDayDataToDB(lDay.getData(itemData.getDate()));
 		//}
 	}
 	
@@ -194,10 +195,10 @@ ItemAdapter.MoveItemListener, CheckNameDialogFragment.ClickedNamePositiveButtonL
 	
 	@Override
 	public void onDayDeleted(Calendar deletedDate) {
-		lDay.UpdateBalance(lDay.GetNextDate(deletedDate));
+		lDay.UpdateBalance(lDay.getNextDate(deletedDate));
 		
 		//　削除された日の前日にスクロールする
-		UpdateListViewAndScroll(lDay.GetDataPositionByDate(lDay.GetBeforeDate(deletedDate)));
+		UpdateListViewAndScroll(lDay.getDataPositionByDate(lDay.getBeforeDate(deletedDate)));
 		
 		DeleteDayDataFromDB(deletedDate);
 	}	
@@ -209,34 +210,34 @@ ItemAdapter.MoveItemListener, CheckNameDialogFragment.ClickedNamePositiveButtonL
 
 		UpdateListViewWithNoScroll();
 		
-		int position = lDay.GetDataPositionByDate(deletedDate);
+		int position = lDay.getDataPositionByDate(deletedDate);
 		if(position == -1){
 			DeleteDayDataFromDB(deletedDate);
 		}
 		else{
-			UpdateDayDataToDB(lDay.GetData(deletedDate));
+			UpdateDayDataToDB(lDay.getData(deletedDate));
 		}
 	}
 	
 	@Override
 	public void upItem(ItemData item, int itemPosition) {
-		lDay.GetData(item.GetDate()).UpItemPosition(itemPosition);
+		lDay.getData(item.getDate()).upItemPosition(itemPosition);
 		UpdateListViewWithNoScroll();
-		UpdateDayDataToDB(lDay.GetData(item.GetDate()));
+		UpdateDayDataToDB(lDay.getData(item.getDate()));
 	}
 
 	@Override
 	public void downItem(ItemData item, int itemPosition) {
-		lDay.GetData(item.GetDate()).DownItemPosition(itemPosition);
+		lDay.getData(item.getDate()).downItemPosition(itemPosition);
 		UpdateListViewWithNoScroll();
-		UpdateDayDataToDB(lDay.GetData(item.GetDate()));
+		UpdateDayDataToDB(lDay.getData(item.getDate()));
 	}
 	
 	/*public boolean ItemIsExistInDay(Calendar date, String name){
 		return lDay.ItemIsExist(date, name);
 	}*/
 	
-	public void LoadDayDataFromDB(){
+	public void LoaddayDataFromDB(){
 		MySQLiteAdapter dbAdapter = new MySQLiteAdapter(this);
 		lDay = dbAdapter.loadDayData();
 	}
@@ -244,9 +245,9 @@ ItemAdapter.MoveItemListener, CheckNameDialogFragment.ClickedNamePositiveButtonL
 	public void LoadItemDataFromDB(){		
 		MySQLiteAdapter dbAdapter = new MySQLiteAdapter(this);
 		
-		for(int i = 0; i < lDay.GetListSize(); i++){
-			Calendar date = lDay.GetData(i).GetDate();
-			lDay.SetItemList(date, dbAdapter.loadItemData(date));
+		for(int i = 0; i < lDay.getListSize(); i++){
+			Calendar date = lDay.getData(i).getDate();
+			lDay.setItemList(date, dbAdapter.loadItemData(date));
 		}
 	}
 	
@@ -266,8 +267,8 @@ ItemAdapter.MoveItemListener, CheckNameDialogFragment.ClickedNamePositiveButtonL
 	public void UpdateDayDataToDB(DayData dayData){
 		MySQLiteAdapter dbAdapter = new MySQLiteAdapter(this);
 		
-		Log.d("UpdateDayDataToDB", dayData.GetStringDate());
-		DeleteDayDataFromDB(dayData.GetDate());
+		Log.d("UpdateDayDataToDB", dayData.getStringDate());
+		DeleteDayDataFromDB(dayData.getDate());
 		InsertDayDataToDB(dayData);
 		dbAdapter.insertItemList(dayData);
 	}
@@ -281,7 +282,7 @@ ItemAdapter.MoveItemListener, CheckNameDialogFragment.ClickedNamePositiveButtonL
 	public void DeleteItemDataFromDB(ItemData itemData, int sequence){
 		MySQLiteAdapter dbAdapter = new MySQLiteAdapter(this);
 		
-		dbAdapter.deleteItemData(itemData.GetStringDate(), sequence);
+		dbAdapter.deleteItemData(DateChanger.ChangeToString(itemData.getDate()), sequence);
 	}
 	
 	public void ReinitializationToDB(){

@@ -61,14 +61,14 @@ public class ItemAdapter extends ArrayAdapter<ItemData>{
     	final ItemData item = (ItemData)getItem(position);
     	if(item != null){
     		// 項目名のセット
-    		if(item.GetNumber() > 1){ // 複数個の場合は個数表示を末尾に追加
+    		if(item.getNumber() > 1){ // 複数個の場合は個数表示を末尾に追加
     			String strColor = context.getResources().getString(R.string.item_number_color);
-    			String strNum = Integer.toString(item.GetNumber());
+    			String strNum = Integer.toString(item.getNumber());
     			String strHtml = "<font color=" +strColor+ "> ×" +strNum+ "</font>";
-    			holder.textItem.setText(Html.fromHtml(item.GetItem() + strHtml));
+    			holder.textItem.setText(Html.fromHtml(item.getName() + strHtml));
     		}
     		else{
-    			holder.textItem.setText(item.GetItem()); 
+    			holder.textItem.setText(item.getName());
     		}
     		
     		SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(context);
@@ -78,11 +78,11 @@ public class ItemAdapter extends ArrayAdapter<ItemData>{
     		int priceColor = context.getResources().getColor(R.color.minus);
     		String initUnit = context.getResources().getString(R.string.initial_unit_string);
     		String unit = pref.getString("unit_string", initUnit);
-    		if(item.GetPrice() > 0){
+    		if(item.getPrice() > 0){
     			sign = "+";
     			priceColor = context.getResources().getColor(R.color.plus);
     		}
-    		holder.textPrice.setText(sign + Integer.toString(item.GetTotalPrice()) + unit);
+    		holder.textPrice.setText(sign + Integer.toString(item.getTotalPrice()) + unit);
     		holder.textPrice.setTextColor(priceColor);
     		
     		// 文字サイズの設定
@@ -97,8 +97,8 @@ public class ItemAdapter extends ArrayAdapter<ItemData>{
     		holder.textPrice.setTextSize(Integer.parseInt(pref.getString("char_size", initFontSize)));
     		
     		// カテゴリー表示の背景色の設定
-    		if(item.GetCategory() > 0){
-    			int color = context.getResources().getIdentifier("category_"+item.GetCategory(), 
+    		if(item.getCategory() > 0){
+    			int color = context.getResources().getIdentifier("category_"+item.getCategory(),
     					"color", context.getPackageName());
     			holder.btnCategory.setBackgroundResource(color);
     		}
@@ -144,7 +144,7 @@ public class ItemAdapter extends ArrayAdapter<ItemData>{
     		
     		// 編集・削除ダイアログを生成        			       			
 			ItemMenuDialogFragment newFragment = 
-					ItemMenuDialogFragment.newInstance(item.GetItem(), upIsPossible, downIsPossible);
+					ItemMenuDialogFragment.newInstance(item.getName(), upIsPossible, downIsPossible);
 			newFragment.setClickedMenuListener(ItemMenuDialog.this);
 			newFragment.show(((Activity)context).getFragmentManager(), "item_menu_dialog");
     	}
@@ -160,7 +160,7 @@ public class ItemAdapter extends ArrayAdapter<ItemData>{
 		public void doDeleteClick() {
 			//　削除確認ダイアログを表示
     		CheckDialogFragment newFragment;
-    		newFragment = CheckDialogFragment.newInstance("警告", item.GetItem()+"を削除しますか？");
+    		newFragment = CheckDialogFragment.newInstance("警告", item.getName()+"を削除しますか？");
     		newFragment.setCheckDialogFragmentListener(ItemMenuDialog.this);
     		newFragment.show(((Activity)context).getFragmentManager(), "check_item_delete_dialog");
 		}
@@ -177,7 +177,7 @@ public class ItemAdapter extends ArrayAdapter<ItemData>{
     	
     	@Override
 		public void ClickedPositiveButton() {
-    		Calendar c = item.GetDate();
+    		Calendar c = item.getDate();
     		remove(item);
     		itemRemoveListener.removeItem(c);
 		}
@@ -190,7 +190,7 @@ public class ItemAdapter extends ArrayAdapter<ItemData>{
 
     		@Override
     		public void doPositiveClick() {
-    			Calendar c = item.GetDate();
+    			Calendar c = item.getDate();
         		remove(item);
         		itemRemoveListener.removeItem(c);
     		}

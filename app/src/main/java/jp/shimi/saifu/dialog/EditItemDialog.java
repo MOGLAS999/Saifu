@@ -9,43 +9,34 @@ import android.app.Activity;
 import android.content.Context;
 
 public class EditItemDialog implements DialogListener{
-	Calendar initDate;
+	ItemData initItemData = new ItemData();
 	int editPosition;
-	String itemName;
-	int itemPrice;
-	int itemNumber;
-	int itemCategory;
 	Context context;
-	
+
+	// TODO:新規ITEMを作成する場合は、最新IDを与えるべき
 	public EditItemDialog(Context context, Calendar initDate){
-		this.context = context;
-		this.initDate = initDate;
-		this.editPosition = -1;
-		this.itemName = "";
-		this.itemPrice = 0;
-		this.itemNumber = 1;
-		this.itemCategory = 0;
+		this(context, new ItemData().setDate(initDate), -1);
 	}
 	
-	public EditItemDialog(Context context, Calendar initDate, int editPosition, 
+	/*public EditItemDialog(Context context, Calendar initDate, int editPosition,
 			String itemName, int itemPrice, int itemNumber, int itemCategory){
 		this.context = context;
-		this.initDate = initDate;
+		this.itemData.setDate(initDate);
+		this.itemData.setName(initDate);
+		this.itemData.setPrice(initDate);
+		this.itemData.setDate(initDate);
+		this.itemData.setDate(initDate);
 		this.editPosition = editPosition;
 		this.itemName = itemName;
 		this.itemPrice = itemPrice;
 		this.itemNumber = itemNumber;
 		this.itemCategory = itemCategory;
-	}
+	}*/
 	
 	public EditItemDialog(Context context, ItemData editItem, int editPosition){
+		this.initItemData = editItem;
 		this.context = context;
-		this.initDate = editItem.GetDate();
 		this.editPosition = editPosition;
-		this.itemName = editItem.GetItem();
-		this.itemPrice = editItem.GetPrice();
-		this.itemNumber = editItem.GetNumber();
-		this.itemCategory = editItem.GetCategory();
 	}
 	
 	public void CreateDialog(){
@@ -61,11 +52,9 @@ public class EditItemDialog implements DialogListener{
 		if(((Activity)context).getFragmentManager().findFragmentByTag("edit_item_dialog") == null){
 			EditItemDialogFragment newFragment;
 			if(this.editPosition == -1){
-				newFragment = EditItemDialogFragment.newInstance(DateChanger.ChangeToString(this.initDate));
+				newFragment = EditItemDialogFragment.newInstance(initItemData.getDate(), 0);
 			}else{
-				newFragment = EditItemDialogFragment.newInstance(DateChanger.ChangeToString(this.initDate),
-						this.editPosition, this.itemName, this.itemPrice, 
-						this.itemNumber, this.itemCategory);
+				newFragment = EditItemDialogFragment.newInstance(initItemData, editPosition);
 			}
 			if(listener == null){
 				newFragment.setDialogListener(EditItemDialog.this);
