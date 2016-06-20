@@ -22,7 +22,7 @@ public class MySQLiteAdapter {
 	static final private String DAY_TABLE_NAME = "day_table";
 	static final private String ITEM_TABLE_NAME = "item_table";
 	static final private String WALLET_TABLE_NAME = "wallet_table";
-	static final private int DB_VERSION = 4;
+	static final private int DB_VERSION = 5;
 	
 	Context context;
 	MySQLiteOpenHelper DBHelper;

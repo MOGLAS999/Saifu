@@ -8,7 +8,19 @@
         "source": "C:\\Users\\gerog\\AndroidStudioProjects\\Saufu\\app\\src\\main\\res\\drawable\\color_select_button.xml"
     },
     {
+        "merged": "C:\\Users\\gerog\\AndroidStudioProjects\\Saifu\\app\\build\\intermediates\\res\\merged\\debug\\drawable\\list_item_color1.xml",
+        "source": "C:\\Users\\gerog\\AndroidStudioProjects\\Saifu\\app\\src\\main\\res\\drawable\\list_item_color1.xml"
+    },
+    {
+        "merged": "C:\\Users\\gerog\\AndroidStudioProjects\\Saifu\\app\\build\\intermediates\\res\\merged\\debug\\drawable\\color_select_button.xml",
+        "source": "C:\\Users\\gerog\\AndroidStudioProjects\\Saifu\\app\\src\\main\\res\\drawable\\color_select_button.xml"
+    },
+    {
         "merged": "C:\\Users\\gerog\\AndroidStudioProjects\\Saufu\\app\\build\\intermediates\\res\\merged\\debug\\drawable\\list_item_color1.xml",
         "source": "C:\\Users\\gerog\\AndroidStudioProjects\\Saufu\\app\\src\\main\\res\\drawable\\list_item_color1.xml"
+    },
+    {
+        "merged": "C:\\Users\\gerog\\AndroidStudioProjects\\Saifu\\app\\build\\intermediates\\res\\merged\\debug\\drawable\\list_item_color2.xml",
+        "source": "C:\\Users\\gerog\\AndroidStudioProjects\\Saifu\\app\\src\\main\\res\\drawable\\list_item_color2.xml"
     }
 ]
