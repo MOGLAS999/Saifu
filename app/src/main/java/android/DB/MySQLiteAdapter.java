@@ -23,7 +23,30 @@ public class MySQLiteAdapter {
 	static final private String ITEM_TABLE_NAME = "item_table";
 	static final private String WALLET_TABLE_NAME = "wallet_table";
 	static final private int DB_VERSION = 5;
-	
+
+	static final private String COMMA = ",";
+
+	static final private String DAY_TABLE_SCHEMA =
+			"date text primary key" + COMMA +
+			"balance integer" /*+ COMMA +
+			"difference integer not null" +*/;
+
+	static final private String ITEM_TABLE_SCHEMA =
+			"id integer primary key autoincrement" + COMMA +
+			"name text not null default '<<no_name>>'" + COMMA +
+			"price integer not null default 0" + COMMA +
+			"date text not null"+ COMMA +
+			"number integer" + COMMA +
+			"category integer" + COMMA +
+			"sequence integer not null" + COMMA +
+			"wallet_id integer not null default -1" + COMMA +
+			"reverse_item_id integer default -1"; // 反転関係にあるアイテム(例：現金で電子マネーをチャージするなど)
+
+	static final private String WALLET_TABLE_SCHEMA =
+			"id integer primary key autoincrement"+ COMMA +
+			"name text" /*+ COMMA +
+			"currency text"+*/;
+
 	Context context;
 	MySQLiteOpenHelper DBHelper;
 	SQLiteDatabase db;
@@ -55,45 +78,91 @@ public class MySQLiteAdapter {
 
 		@Override
 		public void onCreate(SQLiteDatabase db) {
-			final String COMMA = ",";
-
-			db.execSQL("create table " + DAY_TABLE_NAME +"(" +
-					"date text primary key" + COMMA +
-					"balance integer" +
-					//"difference integer not null" +
-					");"
-			);
 			// TODO:DayはItemTableから生成できるので、後々不要になるかもしれない
+			db.execSQL("CREATE TABLE " + DAY_TABLE_NAME +"(" + DAY_TABLE_SCHEMA + ");");
 			
-			db.execSQL("create table " + ITEM_TABLE_NAME +"(" +
-					"id integer primary key autoincrement"+ COMMA +
-					"name text not null"+ COMMA +
-					"price integer not null"+ COMMA +
-					"date text not null"+ COMMA +
-					"number integer"+ COMMA +
-					"category integer"+ COMMA +
-					"sequence integer not null"+ COMMA +
-					"walletId integer not null"+ COMMA +
-					"reverseItemId integer"+ // 反転関係にあるアイテム(例：現金で電子マネーをチャージするなど)
-					");"
-			);
+			db.execSQL("CREATE TABLE " + ITEM_TABLE_NAME +"(" + ITEM_TABLE_SCHEMA + ");");
 
-			db.execSQL("create table " + WALLET_TABLE_NAME +"(" +
-					"id integer primary key autoincrement"+ COMMA +
-					"name text" + //COMMA +
-					//"currency text"+
-					");"
-			);
+			db.execSQL("CREATE TABLE " + WALLET_TABLE_NAME +"(" + WALLET_TABLE_SCHEMA + ");");
 		}
 
 		@Override
 		public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
 			if(oldVersion < newVersion){
-				 if(oldVersion <= 2){
-					 db.execSQL("alter table " + ITEM_TABLE_NAME +
-							 " add sequence integer default 0;"
+				if(oldVersion <= 2){
+					db.execSQL("ALTER TABLE " + ITEM_TABLE_NAME +
+							 " ADD sequence integer default 0;"
 							 );
-				 }
+				}
+				if((oldVersion == 3 || oldVersion == 4) && newVersion == 5){
+					// DayTableの更新
+					// 旧バージョンと同じカラムのテンポラリーテーブル作成
+					db.execSQL("CREATE TEMPORARY TABLE tmp_" + DAY_TABLE_NAME + " (" +
+							"date text not null," +
+							"balance integer" +
+							//"difference integer not null" +
+							");"
+					);
+
+					// 既存テーブルから作成したテンポラリーテーブルにデータを入れる
+					db.execSQL("INSERT INTO tmp_" + DAY_TABLE_NAME + " SELECT " +
+							"date," +
+							"balance" +
+							" FROM " + DAY_TABLE_NAME + ";");
+
+					// 既存テーブル削除
+					db.execSQL("DROP TABLE " + DAY_TABLE_NAME + ";");
+
+
+					// ItemTableの更新
+					// 旧バージョンと同じカラムのテンポラリーテーブル作成
+					db.execSQL("CREATE TEMPORARY TABLE tmp_" + ITEM_TABLE_NAME + " (" +
+							"date text not null,"+
+							"name text,"+
+							"price integer,"+
+							"number integer,"+
+							"category integer,"+
+							"sequence integer not null"+
+							");"
+					);
+
+					// 既存テーブルから作成したテンポラリーテーブルにデータを入れる
+					db.execSQL("INSERT INTO tmp_" + ITEM_TABLE_NAME + " SELECT " +
+							"date," +
+							"name," +
+							"price," +
+							"number," +
+							"category," +
+							"sequence" +
+							" FROM " + ITEM_TABLE_NAME + ";");
+
+					// 既存テーブル削除
+					db.execSQL("DROP TABLE " + ITEM_TABLE_NAME + ";");
+
+					// テーブル作成
+					// 2つ同時にテーブル作成が行われるので、両方をテンポラリーテーブルに入れてからCreateする。
+					onCreate(db);
+
+					// テンポラリーテーブルから新テーブルにデータを入れる
+					db.execSQL("INSERT INTO " + DAY_TABLE_NAME + " SELECT " +
+							"date," +
+							"balance" +
+							" FROM tmp_" + DAY_TABLE_NAME + ";");
+
+					// テンポラリーテーブルから新テーブルにデータを入れる
+					db.execSQL("INSERT INTO " + ITEM_TABLE_NAME +
+							"(name, price, date, number, category, sequence, wallet_id, reverse_item_id)" +
+							" SELECT " +
+							"name," +
+							"price," +
+							"date," +
+							"number," +
+							"category," +
+							"sequence," +
+							"-1," +
+							"-1" +
+							" FROM tmp_" + ITEM_TABLE_NAME + ";");
+				}
 			}
 		}
 	}
@@ -206,7 +275,7 @@ public class MySQLiteAdapter {
 		List<ItemData> itemList = new ArrayList<ItemData>();
 
 		Cursor c = db.query(ITEM_TABLE_NAME, 
-				new String[] {"id", "name", "price", "date", "number", "category", "sequence", "walletId", "reverseItemId"},
+				new String[] {"id", "name", "price", "date", "number", "category", "sequence", "wallet_id", "reverse_item_id"},
 				"date = '" + DateChanger.ChangeToString(date) + "'", null, null, null, "sequence ASC");
 		
 		boolean isEOF = c.moveToFirst();

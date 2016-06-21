@@ -75,8 +75,8 @@ implements SelectCategoryDialogFragment.SelectedCategoryListener{
         builder.setTitle(title);
         builder.setView(layout);
 
-		Calendar initDate = Calendar.getInstance();
-		initDate.setTime(initItemData.getDate().getTime());
+		Calendar initDate;// = Calendar.getInstance();
+		initDate = initItemData.getDate(); // TODO:ぬるぽ修正　多分新規作成時の初期値設定がおかしい
         final Calendar dCalendar = initDate;
 
 		// コンポーネント読み込み
