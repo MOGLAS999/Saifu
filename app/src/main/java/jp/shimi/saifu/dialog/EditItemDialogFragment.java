@@ -17,6 +17,7 @@ import android.content.DialogInterface.OnShowListener;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -33,15 +34,14 @@ implements SelectCategoryDialogFragment.SelectedCategoryListener{
 
 	// アイテムの新規作成
 	// TODO:最新のIDを取得できるようにする
-	public static EditItemDialogFragment newInstance(Calendar initDate, int currentItemId) {
+	public static EditItemDialogFragment newInstance(Calendar initDate, int nextItemId) {
 		EditItemDialogFragment fragment = new EditItemDialogFragment();
 		  
 		// 引数を設定
 		Bundle args = new Bundle();
-		ItemData itemData = new ItemData();
-		itemData.setDate(initDate);
+		ItemData itemData = new ItemData().setDate(initDate);
 		args.putParcelable("itemData", itemData);
-		args.putInt("itemId", currentItemId + 1);
+		args.putInt("itemId", nextItemId);
 		args.putInt("editPosition", -1);
 		fragment.setArguments(args);
 		 
@@ -53,8 +53,8 @@ implements SelectCategoryDialogFragment.SelectedCategoryListener{
 		EditItemDialogFragment fragment = new EditItemDialogFragment();
 		  
 		Bundle args = new Bundle();
-		args.putParcelable("ItemData", itemData);
-		args.putInt("EditPosition", editedItemPosition);
+		args.putParcelable("itemData", itemData);
+		args.putInt("editPosition", editedItemPosition);
 		fragment.setArguments(args);
 		 
 		return fragment;
@@ -67,17 +67,15 @@ implements SelectCategoryDialogFragment.SelectedCategoryListener{
         		(ViewGroup)getActivity().findViewById(R.id.diarydialog_layout));
         
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-        final int editPosition = getArguments().getInt("EditPosition");
-		final ItemData initItemData = getArguments().getParcelable("ItemData");
+        final int editPosition = getArguments().getInt("editPosition");
+		final ItemData initItemData = getArguments().getParcelable("itemData");
 
         String title = "項目の追加";
         if(editPosition >= 0) title = "項目の編集";
         builder.setTitle(title);
         builder.setView(layout);
 
-		Calendar initDate;// = Calendar.getInstance();
-		initDate = initItemData.getDate(); // TODO:ぬるぽ修正　多分新規作成時の初期値設定がおかしい
-        final Calendar dCalendar = initDate;
+        final Calendar dCalendar = initItemData.getDate();
 
 		// コンポーネント読み込み
         final EditText editName = (EditText)layout.findViewById(R.id.editDialogItem);
@@ -276,9 +274,9 @@ implements SelectCategoryDialogFragment.SelectedCategoryListener{
 		            		else{
 		            			Diary callingActivity = (Diary)getActivity();
 		            			// 何故かinitDateがdateEdit.getText().toString()に置き換わっているので新しく取り直す
-		            			Calendar initDate = Calendar.getInstance();
-		            			initDate.setTime(DateChanger.ChangeToDate(getArguments().getString("***")));
-		            			callingActivity.onReturnValue(itemData, initDate, editPosition);  
+		            			/*Calendar initDate = Calendar.getInstance();
+		            			initDate.setTime(DateChanger.ChangeToDate(initItemData.getDate()));*/
+		            			callingActivity.onReturnValue(itemData, initItemData.getDate(), editPosition);
 		            		
 		            			listener.doPositiveClick();
 			            		alertDialog.dismiss(); // ダイアログを閉じる

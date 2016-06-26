@@ -7,6 +7,7 @@ import jp.shimi.saifu.ItemData;
 
 import android.app.Activity;
 import android.content.Context;
+import android.util.Log;
 
 public class EditItemDialog implements DialogListener{
 	ItemData initItemData = new ItemData();

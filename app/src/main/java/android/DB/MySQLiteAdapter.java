@@ -184,8 +184,8 @@ public class MySQLiteAdapter {
 		values.put("number", itemData.getNumber());
         values.put("category", itemData.getCategory());
         values.put("sequence", sequence);
-		values.put("walletId", itemData.getWalletId());
-		values.put("reverseItemId", itemData.getReverseItemId());
+		values.put("wallet_id", itemData.getWalletId());
+		values.put("reverse_item_id", itemData.getReverseItemId());
         
         return values;
 	}
@@ -312,8 +312,8 @@ public class MySQLiteAdapter {
 			values.put("number", item.getNumber());
 			values.put("category", item.getCategory());
 			values.put("sequence", i);
-			values.put("walletId", item.getWalletId());
-			values.put("reverseItemId", item.getReverseItemId());
+			values.put("wallet_id", item.getWalletId());
+			values.put("reverse_item_id", item.getReverseItemId());
 			db.insert(ITEM_TABLE_NAME, null, values);
 		}
 	}
@@ -328,5 +328,20 @@ public class MySQLiteAdapter {
 		for(int i = 0; i < dayList.getListSize(); i++){
 			insertItemList(dayList.getData(i));
 		}
+	}
+
+	// アイテムに現在つけられているIDの最大値を返す
+	public int getMaxItemId(){
+		Cursor c = db.query("sqlite_sequence", new String[] {"name", "seq"}, "name = '" + ITEM_TABLE_NAME + "'", null, null, null, null);
+
+		int seq = -1;
+		boolean isEOF = c.moveToFirst();
+		while (isEOF) {
+			seq = c.getInt(1);
+			isEOF = c.moveToNext();
+		}
+		c.close();
+
+		return seq;
 	}
 }

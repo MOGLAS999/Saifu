@@ -19,12 +19,16 @@ import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.ListView;
 
+// TODO:アイテムの追加・変更時にデータベースにすぐ登録させるようにする
+
 public class Diary extends FragmentActivity 
 implements OnClickListener, DayAdapter.DayAdapterListener,
 ItemAdapter.MoveItemListener, CheckNameDialogFragment.ClickedNamePositiveButtonListener{
+
 	private Button button1;
 	private ListView listView;
 	private DayList lDay = new DayList();
+	final
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -40,11 +44,12 @@ ItemAdapter.MoveItemListener, CheckNameDialogFragment.ClickedNamePositiveButtonL
         button1.setOnClickListener(this);
         
         listView = (ListView)findViewById(R.id.diaryListView);
-        
+
         // 初期残金設定ダイアログ
         if(lDay.getListSize() == 0){
-			// IDを与える
-        	EditItemDialog dialog = new EditItemDialog(this, new ItemData(0, "初期残金", 0, Calendar.getInstance(), 1, 1, -1, -1), 0);
+			MySQLiteAdapter dbAdapter = new MySQLiteAdapter(this);
+			int nextId = dbAdapter.getMaxItemId() + 1;
+        	EditItemDialog dialog = new EditItemDialog(this, new ItemData(nextId, "初期残金", 0, Calendar.getInstance(), 1, 1, -1, -1), -1);
 			dialog.CreateDialog();
         }
         
@@ -147,44 +152,32 @@ ItemAdapter.MoveItemListener, CheckNameDialogFragment.ClickedNamePositiveButtonL
 			InsertDayDataToDB(newDay);
 			Log.d("InsertDayData", newDay.getStringDate()+" Passed");
 		}
-		
-		/*if(lDay.ItemIsExist(itemData.getDate(), itemData.getItem())){
-			String title = "警告";
-			String text = itemData.getStringDate() + "には既に" + itemData.getItem() + "が存在します。\n"
-				+ "項目名を再編集してください。";
-			
-			CheckNameDialogFragment newFragment;
-			newFragment = CheckNameDialogFragment.newInstance(title, text, itemData, editPosition);
-			newFragment.setClickedNamePositiveButtonListener(this);
-			newFragment.show(getFragmentManager(), "name_check_dialog");
-		}*/
-		//else{
-			if(editPosition >= 0){
-				// 編集モード
-				if(itemData.getDate().equals(initDate)){
-					//lDay.SetItemData(initDate, itemData, editPosition);
-					// 削除処理は各ArrayAdapterで行うので、追加のみ行う
-					if(editPosition + 1 == lDay.getListSize()){
-						lDay.addItemData(itemData.getDate(), itemData);
-					}else{
-						lDay.addItemData(itemData.getDate(), itemData, editPosition+1);
-					}
-				}else{
-					//lDay.RemoveItemData(initDate, editPosition);
+
+		if (editPosition >= 0) {
+			// 編集モード
+			if (itemData.getDate().equals(initDate)) {
+				//lDay.SetItemData(initDate, itemData, editPosition);
+				// 削除処理は各ArrayAdapterで行うので、追加のみ行う
+				if (editPosition + 1 == lDay.getListSize()) {
 					lDay.addItemData(itemData.getDate(), itemData);
+				} else {
+					lDay.addItemData(itemData.getDate(), itemData, editPosition + 1);
 				}
-			}else{
+			} else {
+				//lDay.RemoveItemData(initDate, editPosition);
 				lDay.addItemData(itemData.getDate(), itemData);
 			}
-	
-			// 項目が編集された日にスクロールする
-			UpdateListViewAndScroll(lDay.getDataPositionByDate(itemData.getDate()));
-		
-			if(!initDate.equals(itemData.getDate()) && d >= 0){
-				UpdateDayDataToDB(lDay.getData(initDate));
-			}
-			UpdateDayDataToDB(lDay.getData(itemData.getDate()));
-		//}
+		} else {
+			lDay.addItemData(itemData.getDate(), itemData);
+		}
+
+		// 項目が編集された日にスクロールする
+		UpdateListViewAndScroll(lDay.getDataPositionByDate(itemData.getDate()));
+
+		if (!initDate.equals(itemData.getDate()) && d >= 0) {
+			UpdateDayDataToDB(lDay.getData(initDate));
+		}
+		UpdateDayDataToDB(lDay.getData(itemData.getDate()));
 	}
 	
 	@Override
@@ -242,9 +235,9 @@ ItemAdapter.MoveItemListener, CheckNameDialogFragment.ClickedNamePositiveButtonL
 		lDay = dbAdapter.loadDayData();
 	}
 	
-	public void LoadItemDataFromDB(){		
+	public void LoadItemDataFromDB(){
 		MySQLiteAdapter dbAdapter = new MySQLiteAdapter(this);
-		
+
 		for(int i = 0; i < lDay.getListSize(); i++){
 			Calendar date = lDay.getData(i).getDate();
 			lDay.setItemList(date, dbAdapter.loadItemData(date));
@@ -253,20 +246,20 @@ ItemAdapter.MoveItemListener, CheckNameDialogFragment.ClickedNamePositiveButtonL
 	
 	public void InsertDayDataToDB(DayData dayData){
 		MySQLiteAdapter dbAdapter = new MySQLiteAdapter(this);
-		
+
 		dbAdapter.insertDayData(dayData);
 	}
 	
 	public void InsertItemDataToDB(ItemData itemData, int sequence){
 		MySQLiteAdapter dbAdapter = new MySQLiteAdapter(this);
-		
+
 		dbAdapter.insertItemData(itemData, sequence);
 	}
 	
 	// 渡した日データのアイテムリストでアイテムテーブル内の指定日のデータを再初期化する。
 	public void UpdateDayDataToDB(DayData dayData){
 		MySQLiteAdapter dbAdapter = new MySQLiteAdapter(this);
-		
+
 		Log.d("UpdateDayDataToDB", dayData.getStringDate());
 		DeleteDayDataFromDB(dayData.getDate());
 		InsertDayDataToDB(dayData);
@@ -275,19 +268,19 @@ ItemAdapter.MoveItemListener, CheckNameDialogFragment.ClickedNamePositiveButtonL
 	
 	public void DeleteDayDataFromDB(Calendar date){
 		MySQLiteAdapter dbAdapter = new MySQLiteAdapter(this);
-		
+
 		dbAdapter.deleteDayData(DateChanger.ChangeToString(date));
 	}
 	
 	public void DeleteItemDataFromDB(ItemData itemData, int sequence){
 		MySQLiteAdapter dbAdapter = new MySQLiteAdapter(this);
-		
+
 		dbAdapter.deleteItemData(DateChanger.ChangeToString(itemData.getDate()), sequence);
 	}
 	
 	public void ReinitializationToDB(){
 		MySQLiteAdapter dbAdapter = new MySQLiteAdapter(this);
-		
+
 		dbAdapter.saveDayList(lDay);
 	}
 }
