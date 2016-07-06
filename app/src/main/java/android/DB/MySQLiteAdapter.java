@@ -272,8 +272,30 @@ public class MySQLiteAdapter {
 		db.close();
 		
 	}
-	
-	public DayList loadDayData(){
+
+	/**
+	 *  単一の日データを日付から取得する
+	 */
+	public DayData loadDayData(Calendar date){
+		List<DayData> dList = new ArrayList<DayData>();
+
+		Cursor c = db.query(DAY_TABLE_NAME, new String[] {"date", "balance"},
+				"date = '" + DateChanger.ChangeToString(date), null, null, null, null);
+
+		boolean isEOF = c.moveToFirst();
+		while (isEOF) {
+			dList.add(new DayData(DateChanger.ChangeToCalendar(c.getString(0)), c.getInt(1)));
+			isEOF = c.moveToNext();
+		}
+		c.close();
+
+		if(dList.size() == 0) return null;
+		else if(dList.size() == 1) return dList.get(0);
+		else throw new IllegalArgumentException("date conflict");
+	}
+
+
+	public DayList loadAllDayList(){
 		DayList dayList = new DayList();
 
 		Cursor c = db.query(DAY_TABLE_NAME, new String[] {"date", "balance"},
@@ -286,6 +308,31 @@ public class MySQLiteAdapter {
 		}
 		c.close();
 		
+		return dayList;
+	}
+
+    /**
+     * 一定期間のアイテムを持ったDayListを取得する
+     */
+	public DayList loadDayList(Calendar startDate, Calendar endDate){
+		DayList dayList = new DayList();
+
+		Cursor c = db.query(DAY_TABLE_NAME, new String[] {"date", "balance"},
+				"BETWEEN date '" + DateChanger.ChangeToString(startDate) + "' AND '" + DateChanger.ChangeToString(endDate)
+				, null, null, null, "date ASC");
+
+		boolean isEOF = c.moveToFirst();
+		while (isEOF) {
+			dayList.addData(new DayData(DateChanger.ChangeToCalendar(c.getString(0)), c.getInt(1)));
+			isEOF = c.moveToNext();
+		}
+		c.close();
+
+		for(int i = 0; i < dayList.getListSize(); i++){
+			Calendar date = dayList.getData(i).getDate();
+			dayList.setItemList(date, loadItemData(date));
+		}
+
 		return dayList;
 	}
 

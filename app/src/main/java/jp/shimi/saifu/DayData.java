@@ -62,6 +62,14 @@ public class DayData{
 	public void addItem(ItemData newItem, int position){
 		this.itemList.add(position, newItem);
 	}
+
+	public void addItemList(List<ItemData> newItemList){
+		this.itemList.addAll(newItemList);
+	}
+
+	public void addItemList(List<ItemData> newItemList, int position){
+		this.itemList.addAll(position, newItemList);
+	}
 	
 	public void setItem(int index, ItemData newItem){
 		this.itemList.set(index, newItem);

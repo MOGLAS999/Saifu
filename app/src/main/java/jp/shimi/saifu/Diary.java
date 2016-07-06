@@ -232,7 +232,7 @@ ItemAdapter.MoveItemListener, CheckNameDialogFragment.ClickedNamePositiveButtonL
 	
 	public void loadDayDataFromDB(){
 		MySQLiteAdapter dbAdapter = new MySQLiteAdapter(this);
-		lDay = dbAdapter.loadDayData();
+		lDay = dbAdapter.loadAllDayList();
 	}
 	
 	public void loadItemDataFromDB(){
