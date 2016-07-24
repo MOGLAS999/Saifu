@@ -83,6 +83,7 @@ implements SelectCategoryDialogFragment.SelectedCategoryListener{
         final EditText editDate = (EditText)layout.findViewById(R.id.editDialogDate);
         final EditText editNumber = (EditText)layout.findViewById(R.id.editDialogNumber);
         final TextView textTotalPrice = (TextView)layout.findViewById(R.id.textTotalPrice);
+		final Button btnConsumptionTax = (Button)layout.findViewById(R.id.consumptionTaxButton);
         final Button btnCategory = (Button)layout.findViewById(R.id.categoryButton);
         
         textTotalPrice.setWidth(textTotalPrice.getWidth());
@@ -145,6 +146,21 @@ implements SelectCategoryDialogFragment.SelectedCategoryListener{
         		newFragment.show(getActivity().getFragmentManager(), "select_category_dialog");
         	}
         });
+
+		// 税込み価格計算ボタンの処理
+		// ボタンを押すと価格×1.08する
+		// TODO:消費税を期間ごとに設定できるようにする
+		btnConsumptionTax.setOnClickListener(new OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				String strPrice = editPrice.getText().toString();
+				if(!strPrice.isEmpty() && strPrice != null){
+					int price = Integer.parseInt(strPrice);
+					price *= 1.08;
+					editPrice.setText(Integer.toString(price));
+				}
+			}
+		});
         
         editDate.setText(DateChanger.ChangeToString(dCalendar.getTime()));
         editDate.setOnClickListener(new OnClickListener(){

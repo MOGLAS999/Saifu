@@ -428,7 +428,10 @@ public class MySQLiteAdapter {
 		}
 	}
 
-	// アイテムに現在つけられているIDの最大値を返す
+	/**アイテムに現在つけられているIDの最大値を返す
+	 *
+	 * @return seq 現在アイテムに使用されているIDの最大値
+     */
 	public int getMaxItemId(){
 		Cursor c = db.query("sqlite_sequence", new String[] {"name", "seq"}, "name = '" + ITEM_TABLE_NAME + "'", null, null, null, null);
 

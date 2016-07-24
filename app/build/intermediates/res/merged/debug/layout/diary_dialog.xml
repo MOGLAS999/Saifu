@@ -47,6 +47,15 @@
         android:layout_height="wrap_content" >
 
         <Button
+            android:id="@+id/consumptionTaxButton"
+            style="?android:attr/buttonStyleSmall"
+            android:layout_width="50dp"
+            android:layout_height="match_parent"
+            android:gravity="center"
+            android:textSize="20sp"
+            android:text="税" />
+
+        <Button
             android:id="@+id/plusMinusButton"
             style="?android:attr/buttonStyleSmall"
             android:layout_width="40dp"

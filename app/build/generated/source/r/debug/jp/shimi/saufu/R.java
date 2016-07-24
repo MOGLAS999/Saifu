@@ -48,36 +48,37 @@ public final class R {
     }
     public static final class id {
         public static final int LinearLayout2=0x7f0a0007;
-        public static final int TextView2=0x7f0a0014;
-        public static final int action_settings=0x7f0a001e;
+        public static final int TextView2=0x7f0a0015;
+        public static final int action_settings=0x7f0a001f;
         public static final int addButton1=0x7f0a0009;
-        public static final int buttonCategory=0x7f0a001b;
+        public static final int buttonCategory=0x7f0a001c;
         public static final int calendar_dialog=0x7f0a0000;
         public static final int categoryButton=0x7f0a000b;
         public static final int categoryColor=0x7f0a0002;
+        public static final int consumptionTaxButton=0x7f0a000e;
         public static final int diaryListView=0x7f0a0008;
         public static final int diarydialog_layout=0x7f0a000a;
         public static final int editDialogDate=0x7f0a000c;
         public static final int editDialogItem=0x7f0a000d;
-        public static final int editDialogNumber=0x7f0a0012;
-        public static final int editDialogPrice=0x7f0a000f;
-        public static final int editInitBalance=0x7f0a0019;
-        public static final int editInitBalanceDate=0x7f0a0018;
-        public static final int edit_delete_layout=0x7f0a0015;
-        public static final int init_balance_dialog=0x7f0a0017;
+        public static final int editDialogNumber=0x7f0a0013;
+        public static final int editDialogPrice=0x7f0a0010;
+        public static final int editInitBalance=0x7f0a001a;
+        public static final int editInitBalanceDate=0x7f0a0019;
+        public static final int edit_delete_layout=0x7f0a0016;
+        public static final int init_balance_dialog=0x7f0a0018;
         public static final int listCategory=0x7f0a0001;
-        public static final int listEditDelete=0x7f0a0016;
+        public static final int listEditDelete=0x7f0a0017;
         public static final int lstItem=0x7f0a0005;
-        public static final int plusMinusButton=0x7f0a000e;
+        public static final int plusMinusButton=0x7f0a000f;
         public static final int textCategory=0x7f0a0003;
-        public static final int textInitBalanceYen=0x7f0a001a;
-        public static final int textItemPrice=0x7f0a001d;
-        public static final int textTimes=0x7f0a0011;
-        public static final int textTotalPrice=0x7f0a0013;
-        public static final int textView1=0x7f0a0010;
+        public static final int textInitBalanceYen=0x7f0a001b;
+        public static final int textItemPrice=0x7f0a001e;
+        public static final int textTimes=0x7f0a0012;
+        public static final int textTotalPrice=0x7f0a0014;
+        public static final int textView1=0x7f0a0011;
         public static final int txtBalance=0x7f0a0006;
         public static final int txtDate=0x7f0a0004;
-        public static final int txtItemName=0x7f0a001c;
+        public static final int txtItemName=0x7f0a001d;
     }
     public static final class layout {
         public static final int calendar=0x7f030000;
