@@ -35,12 +35,12 @@ ADDED from C:\Users\gerog\AndroidStudioProjects\Saifu\app\src\main\AndroidManife
 		ADDED from C:\Users\gerog\AndroidStudioProjects\Saifu\app\src\main\AndroidManifest.xml:13:9-43
 	android:theme
 		ADDED from C:\Users\gerog\AndroidStudioProjects\Saifu\app\src\main\AndroidManifest.xml:15:9-40
-activity#jp.shimi.saifu.Diary
+activity#jp.shimi.saifu.MainActivity
 ADDED from C:\Users\gerog\AndroidStudioProjects\Saifu\app\src\main\AndroidManifest.xml:16:9-25:20
 	android:label
 		ADDED from C:\Users\gerog\AndroidStudioProjects\Saifu\app\src\main\AndroidManifest.xml:18:13-57
 	android:name
-		ADDED from C:\Users\gerog\AndroidStudioProjects\Saifu\app\src\main\AndroidManifest.xml:17:13-48
+		ADDED from C:\Users\gerog\AndroidStudioProjects\Saifu\app\src\main\AndroidManifest.xml:17:13-55
 intent-filter#android.intent.action.MAIN+android.intent.category.LAUNCHER
 ADDED from C:\Users\gerog\AndroidStudioProjects\Saifu\app\src\main\AndroidManifest.xml:20:13-24:29
 action#android.intent.action.MAIN

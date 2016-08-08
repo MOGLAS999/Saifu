@@ -5,6 +5,10 @@ import android.os.Parcelable;
 
 import java.util.Calendar;
 
+/**
+ * アイテムのクラス
+ */
+
 public class ItemData implements Parcelable {
 	private int id;
 	private String name;

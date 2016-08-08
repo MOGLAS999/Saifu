@@ -3,21 +3,21 @@ package jp.shimi.saifu.dialog;
 import java.util.Calendar;
 
 import jp.shimi.saifu.DateChanger;
-import jp.shimi.saifu.Diary;
 import jp.shimi.saifu.ItemData;
 import jp.shimi.saufu.R;
 
+import android.DB.MySQLiteAdapter;
 import android.app.AlertDialog;
 import android.app.DatePickerDialog;
 import android.app.Dialog;
 import android.app.DialogFragment;
+import android.content.ClipData;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnShowListener;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -30,13 +30,14 @@ import android.widget.TextView;
 public class EditItemDialogFragment extends DialogFragment 
 implements SelectCategoryDialogFragment.SelectedCategoryListener{
 	LayoutInflater inflater;
-	private DialogListener listener = null;
+	private EditItemDialogListener listener = null;
 
 	// アイテムの新規作成
-	// TODO:最新のIDを取得できるようにする
-	public static EditItemDialogFragment newInstance(Calendar initDate, int nextItemId) {
+	public static EditItemDialogFragment newInstance(Calendar initDate) {
 		EditItemDialogFragment fragment = new EditItemDialogFragment();
-		  
+
+		int nextItemId = MySQLiteAdapter.getMaxItemId() + 1;
+
 		// 引数を設定
 		Bundle args = new Bundle();
 		ItemData itemData = new ItemData().setDate(initDate);
@@ -54,6 +55,7 @@ implements SelectCategoryDialogFragment.SelectedCategoryListener{
 		  
 		Bundle args = new Bundle();
 		args.putParcelable("itemData", itemData);
+		args.putInt("itemId", itemData.getId());
 		args.putInt("editPosition", editedItemPosition);
 		fragment.setArguments(args);
 		 
@@ -69,6 +71,7 @@ implements SelectCategoryDialogFragment.SelectedCategoryListener{
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         final int editPosition = getArguments().getInt("editPosition");
 		final ItemData initItemData = getArguments().getParcelable("itemData");
+		final int itemId = getArguments().getInt("itemId");
 
         String title = "項目の追加";
         if(editPosition >= 0) title = "項目の編集";
@@ -211,7 +214,7 @@ implements SelectCategoryDialogFragment.SelectedCategoryListener{
         builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
         	@Override
 			public void onClick(DialogInterface dialog, int which) {
-				listener.doNegativeClick();
+				// Cancel時の処理　現在は空
 			}
 		});
         
@@ -274,9 +277,9 @@ implements SelectCategoryDialogFragment.SelectedCategoryListener{
 		            		if(category < 0) category = 0;
 		            		
 		            		// 項目を元のアクティビティに返す
-		            		ItemData itemData = new ItemData(initItemData.getId(), strName, price, editDate.getText().toString(),
+		            		ItemData itemData = new ItemData(itemId, strName, price, editDate.getText().toString(),
 		            				number, category, initItemData.getWalletId(), initItemData.getReverseItemId());
-		            		if(editPosition >= 0){
+		            		if(editPosition > -1){ // 何も項目が変わっていない場合はレコード更新を行わない
 								if(itemData.getName() == initItemData.getName() &&
 										itemData.getPrice() == initItemData.getPrice() &&
 										itemData.getDate() == initItemData.getDate() &&
@@ -287,16 +290,8 @@ implements SelectCategoryDialogFragment.SelectedCategoryListener{
 									alertDialog.dismiss(); // ダイアログを閉じる
 								}
 		            		}
-		            		else{
-		            			Diary callingActivity = (Diary)getActivity();
-		            			// 何故かinitDateがdateEdit.getText().toString()に置き換わっているので新しく取り直す
-		            			/*Calendar initDate = Calendar.getInstance();
-		            			initDate.setTime(DateChanger.ChangeToDate(initItemData.getDate()));*/
-		            			callingActivity.onReturnValue(itemData, initItemData.getDate(), editPosition);
-		            		
-		            			listener.doPositiveClick();
-			            		alertDialog.dismiss(); // ダイアログを閉じる
-		            		}
+							listener.onReturnEditedItemData(itemData, initItemData.getDate(), editPosition);
+							alertDialog.dismiss(); // ダイアログを閉じる
 		            	}  	            	           
 					}
 				});
@@ -305,18 +300,23 @@ implements SelectCategoryDialogFragment.SelectedCategoryListener{
         
 	    return alertDialog;
 	}
-	
+
+	public interface EditItemDialogListener{
+
+		public void onReturnEditedItemData(ItemData itemData, Calendar initDate, int editPosition);
+	}
+
 	/**
 	 * リスナーを追加
 	 */
-	public void setDialogListener(DialogListener listener){
-	    this.listener = listener;
+	public void setEditItemDialogListener(EditItemDialogListener listener){
+		this.listener = listener;
 	}
 	    
 	/**
 	 * リスナー削除
 	 */
-	public void removeDialogListener(){
+	public void removeEditItemDialogListener(){
 	    this.listener = null;
 	}
 

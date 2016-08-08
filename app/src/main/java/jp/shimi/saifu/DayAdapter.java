@@ -6,7 +6,7 @@ import java.util.List;
 
 import jp.shimi.saifu.dialog.CheckDialogFragment;
 import jp.shimi.saifu.dialog.DayMenuDialogFragment;
-import jp.shimi.saifu.dialog.EditItemDialog;
+import jp.shimi.saifu.dialog.EditItemDialogFragment;
 import jp.shimi.saufu.R;
 
 import android.app.Activity;
@@ -23,6 +23,10 @@ import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 
+/**
+ * 日リストを生成するアダプター
+ */
+
 public class DayAdapter extends ArrayAdapter<DayData>
 		implements ItemAdapter.ItemRemoveListener,
 		ItemAdapter.MoveItemListener{
@@ -30,7 +34,8 @@ public class DayAdapter extends ArrayAdapter<DayData>
 	private Context context;
 	private DayAdapterListener listener;
 	private ItemAdapter.MoveItemListener moveItemListener = null;
-	
+	private static final double LATEST_BALANCE_FONTSIZE_RATE = 1.3;
+
 	private class ViewHolder{
 		TextView textDate;
 		LinearLayout listItem;
@@ -84,7 +89,7 @@ public class DayAdapter extends ArrayAdapter<DayData>
     		int textSize = Integer.parseInt(pref.getString("char_size", initFontSize));
     		holder.textDate.setTextSize(textSize);
     		if(position == getCount() - 1){
-    			holder.textBalance.setTextSize(textSize*(float)1.3);
+    			holder.textBalance.setTextSize(textSize*(float)LATEST_BALANCE_FONTSIZE_RATE);
     		}else{
     			holder.textBalance.setTextSize(textSize);
     		}
@@ -122,8 +127,11 @@ public class DayAdapter extends ArrayAdapter<DayData>
     	
     	@Override
     	public void doFirstClick() {
-    		EditItemDialog dialog = new EditItemDialog(context, day.getDate());
-    		dialog.CreateDialog();
+			// アイテムの新規作成ダイアログを生成
+			EditItemDialogFragment newFragment;
+			newFragment = EditItemDialogFragment.newInstance(day.getDate());
+			newFragment.setEditItemDialogListener((MainActivity)context);
+			newFragment.show(((Activity)context).getFragmentManager(), "edit_item_dialog");
     	}
 
     	@Override

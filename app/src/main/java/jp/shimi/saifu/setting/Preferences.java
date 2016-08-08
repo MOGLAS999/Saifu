@@ -1,6 +1,6 @@
 package jp.shimi.saifu.setting;
 
-import jp.shimi.saifu.Diary;
+import jp.shimi.saifu.MainActivity;
 import jp.shimi.saufu.R;
 
 import android.content.Intent;
@@ -39,7 +39,7 @@ public class Preferences extends PreferenceActivity{
 	
 	public void onDestroy(){
 		super.onDestroy();
-		Intent intent = new Intent(this, Diary.class);
+		Intent intent = new Intent(this, MainActivity.class);
 		intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
 		startActivity(intent);
 	}

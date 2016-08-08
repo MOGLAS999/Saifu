@@ -12,14 +12,14 @@
         jar="C:\Users\gerog\AndroidStudioProjects\Saifu\app\build\intermediates\incremental-classes\debug\instant-run-bootstrap.jar"
         jumboMode="true"
         revision="23.0.1"
-        sha1="740eea93cb18141964f3cb7791921faa84ccba25">
+        sha1="103393787d43128b61f7632271fa8e1dfdab79d2">
         <dex dex="C:\Users\gerog\AndroidStudioProjects\Saifu\app\build\intermediates\transforms\dex\debug\folders\1000\10\instant-run-bootstrap_9c656771920491ac318f174b8435e9583ca48cab\classes.dex" />
     </item>
     <item
         jar="C:\Users\gerog\AndroidStudioProjects\Saifu\app\build\intermediates\incremental-runtime-classes\debug\instant-run.jar"
         jumboMode="true"
         revision="23.0.1"
-        sha1="9cc2ad41cc3efcca8440d0530b6a614f241c1fb5">
+        sha1="6e4118490d0c7c0ba56857a84767967ec4162882">
         <dex dex="C:\Users\gerog\AndroidStudioProjects\Saifu\app\build\intermediates\transforms\dex\debug\folders\1000\10\instant-run_96f0b908f18d8335ccf472dbcb4d4ffbfc347e6f\classes.dex" />
     </item>
 

@@ -14,6 +14,7 @@ import android.database.Cursor;
 import android.database.DatabaseUtils;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.util.Log;
 
 public class MySQLiteAdapter {
 	static final private String DB_NAME = "Saifu.db";
@@ -45,9 +46,9 @@ public class MySQLiteAdapter {
 			"name text" /*+ COMMA +
 			"currency text"+*/;
 
-	Context context;
-	MySQLiteOpenHelper DBHelper;
-	SQLiteDatabase db;
+	private static Context context;
+	private static MySQLiteOpenHelper DBHelper;
+	private static SQLiteDatabase db;
 	
 	public MySQLiteAdapter(Context context){
 		this.context = context;
@@ -65,7 +66,7 @@ public class MySQLiteAdapter {
 		}
 	}
 	
-	private void destruction(){
+	public void destruction(){
 		this.db.close();
 	}
 	
@@ -165,7 +166,7 @@ public class MySQLiteAdapter {
 		}
 	}
 	
-	public ContentValues getDayDataContentValues(DayData dayData){
+	public static ContentValues getDayDataContentValues(DayData dayData){
 		ContentValues values = new ContentValues();  
         values.put("date", dayData.getStringDate());  
         values.put("balance", dayData.getBalance()); 
@@ -173,7 +174,7 @@ public class MySQLiteAdapter {
         return values;
 	}
 	
-	public ContentValues getItemDataContentValues(ItemData itemData, int sequence){
+	public static ContentValues getItemDataContentValues(ItemData itemData, int sequence){
 		ContentValues values = new ContentValues();
 		values.put("id", itemData.getId());
         values.put("name", itemData.getName());
@@ -191,7 +192,7 @@ public class MySQLiteAdapter {
 	/**
 	 * 日付以外指定しない。新規追加時に使用する
 	 */
-	public ContentValues getItemDataContentValues(Calendar date){
+	public static ContentValues getItemDataContentValues(Calendar date){
 		ContentValues values = new ContentValues();
 		values.put("date", DateChanger.ChangeToString(date));
 
@@ -203,7 +204,7 @@ public class MySQLiteAdapter {
 	}
 
 
-	public void insertDayData(DayData dayData){
+	public static void insertDayData(DayData dayData){
 		long recodeCount = DatabaseUtils.queryNumEntries(db, DAY_TABLE_NAME, 
 				"date = '" + dayData.getStringDate() +"'");
 		
@@ -212,44 +213,46 @@ public class MySQLiteAdapter {
 		}
 	}
 	
-	public void updateDayData(DayData dayData){
+	public static void updateDayData(DayData dayData){
 		db.update(DAY_TABLE_NAME, getDayDataContentValues(dayData), 
 				"date = '" + dayData.getStringDate() + "'", null);
 	}
 	
-	public void deleteDayData(String deletedDate){
+	public static void deleteDayData(String deletedDate){
 		db.delete(DAY_TABLE_NAME, "date == '" + deletedDate + "'", null);
 		
 		deleteItemDataByDate(deletedDate);
 	}
 	
-	public void insertItemData(ItemData itemData, int sequence){
+	public static void insertItemData(ItemData itemData, int sequence){
 		db.insert(ITEM_TABLE_NAME, null, getItemDataContentValues(itemData, sequence));
+
+		Log.d("insertItemData", itemData.getName() + " is inserted where sequence = " + sequence);
 	}
 
-	public ItemData addItemData(Calendar date){
+	public static ItemData addItemData(Calendar date){
 		db.insert(ITEM_TABLE_NAME, null, getItemDataContentValues(date));
 
 		return loadNewestItemData();
 	}
 	
-	public void updateItemData(ItemData itemData, int sequence){
+	public static void updateItemData(ItemData itemData, int sequence){
 		db.update(ITEM_TABLE_NAME, getItemDataContentValues(itemData, sequence), 
 				"id = '" + itemData.getId() + "'" , null);
 	}
 	
-	public void deleteItemData(ItemData deletedData){
+	public static void deleteItemData(ItemData deletedData){
 		db.delete(ITEM_TABLE_NAME, "id = '" + deletedData.getId() + "'" , null);
 		
 		updateItemDataOrder(deletedData.getStringDate());
 	}
 	
-	public void deleteItemDataByDate(String deletedDate){
+	public static void deleteItemDataByDate(String deletedDate){
 		db.delete(ITEM_TABLE_NAME, "date = '" + deletedDate + "'", null);
 	}
 
 	// DB内のアイテムの並びを整理する
-	public void updateItemDataOrder(String date){
+	public static void updateItemDataOrder(String date){
 		Cursor c = db.query(ITEM_TABLE_NAME, 
 				new String[] {"date", "sequence"},
 				"date = '" + date + "'", null, null, null, "sequence ASC");
@@ -268,15 +271,16 @@ public class MySQLiteAdapter {
 		    isEOF = c.moveToNext();
 		}
 		c.close();
-			 
-		db.close();
+
+		//FIXME:なんでここにdb.closeが????????
+		//db.close();
 		
 	}
 
 	/**
 	 *  単一の日データを日付から取得する
 	 */
-	public DayData loadDayData(Calendar date){
+	public static DayData loadDayData(Calendar date){
 		List<DayData> dList = new ArrayList<DayData>();
 
 		Cursor c = db.query(DAY_TABLE_NAME, new String[] {"date", "balance"},
@@ -295,7 +299,7 @@ public class MySQLiteAdapter {
 	}
 
 
-	public DayList loadAllDayList(){
+	public static DayList loadAllDayList(){
 		DayList dayList = new DayList();
 
 		Cursor c = db.query(DAY_TABLE_NAME, new String[] {"date", "balance"},
@@ -314,7 +318,7 @@ public class MySQLiteAdapter {
     /**
      * 一定期間のアイテムを持ったDayListを取得する
      */
-	public DayList loadDayList(Calendar startDate, Calendar endDate){
+	public static DayList loadDayList(Calendar startDate, Calendar endDate){
 		DayList dayList = new DayList();
 
 		Cursor c = db.query(DAY_TABLE_NAME, new String[] {"date", "balance"},
@@ -339,7 +343,7 @@ public class MySQLiteAdapter {
 	/**
 	 *  日付ごとのアイテムのリストを取得する
 	 */
-	public List<ItemData> loadItemData(Calendar date){
+	public static List<ItemData> loadItemData(Calendar date){
 		List<ItemData> itemList = new ArrayList<ItemData>();
 
 		Cursor c = db.query(ITEM_TABLE_NAME, 
@@ -360,7 +364,7 @@ public class MySQLiteAdapter {
 	/**
 	 *  単一のアイテムをIDから取得する
 	 */
-	public ItemData loadItemData(int id){
+	public static ItemData loadItemData(int id){
 		List<ItemData> itemList = new ArrayList<ItemData>();
 
 		Cursor c = db.query(ITEM_TABLE_NAME,
@@ -383,11 +387,11 @@ public class MySQLiteAdapter {
 	/**
 	 *  最新の(IDが最大の)アイテムを取得する
 	 */
-	public ItemData loadNewestItemData(){
+	public static ItemData loadNewestItemData(){
 		return loadItemData(getMaxItemId());
 	}
 	
-	public void insertDayList(DayList dayList){
+	public static void insertDayList(DayList dayList){
 		db.delete("day_table", null, null);
 		
 		for(int i = 0; i < dayList.getListSize(); i++){
@@ -398,8 +402,41 @@ public class MySQLiteAdapter {
 			db.insert(DAY_TABLE_NAME, null, values);
 		}
 	}
+
+	/**
+	 * アイテムIDからアイテムを探索してデータを更新する
+	 * アイテムIDがない場合はアイテムを追加する
+	 * @param dayData
+     */
+	public static void updateItemList(DayData dayData){
+		for(int i = 0; i < dayData.getItemSize(); i++){
+			ItemData item = dayData.getItemList().get(i);
+			ContentValues values = new ContentValues();
+			values.put("id", item.getId());
+			values.put("name", item.getName());
+			values.put("price", item.getPrice());
+			values.put("date", item.getStringDate());
+			values.put("number", item.getNumber());
+			values.put("category", item.getCategory());
+			values.put("sequence", i);
+			values.put("wallet_id", item.getWalletId());
+			values.put("reverse_item_id", item.getReverseItemId());
+
+			long recodeCount = DatabaseUtils.queryNumEntries(db, ITEM_TABLE_NAME, "id = " + item.getId());
+			Log.d("updateItemList", "id = "+item.getId()+": count = "+recodeCount);
+			if(recodeCount == 0){
+				db.insert(ITEM_TABLE_NAME, null, values);
+			}
+			else if(recodeCount == 1){
+				db.update(ITEM_TABLE_NAME, values, "id = " + item.getId(), null);
+			}
+			else {
+				Log.e("updateItemList", "Error");
+			}
+		}
+	}
 	
-	public void insertItemList(DayData dayData){
+	public static void insertItemList(DayData dayData){
 		for(int i = 0; i < dayData.getItemSize(); i++){
 			ItemData item = dayData.getItemList().get(i);
 			ContentValues values = new ContentValues();
@@ -415,24 +452,13 @@ public class MySQLiteAdapter {
 			db.insert(ITEM_TABLE_NAME, null, values);
 		}
 	}
-	
-	public void saveDayList(DayList dayList){
-		db.execSQL("drop table " + DAY_TABLE_NAME);
-		db.execSQL("drop table " + ITEM_TABLE_NAME);
-		this.DBHelper.onCreate(db);
-		
-		insertDayList(dayList);
-		
-		for(int i = 0; i < dayList.getListSize(); i++){
-			insertItemList(dayList.getData(i));
-		}
-	}
 
-	/**アイテムに現在つけられているIDの最大値を返す
+	/**
+	 * アイテムに現在つけられているIDの最大値を返す
 	 *
 	 * @return seq 現在アイテムに使用されているIDの最大値
      */
-	public int getMaxItemId(){
+	public static int getMaxItemId(){
 		Cursor c = db.query("sqlite_sequence", new String[] {"name", "seq"}, "name = '" + ITEM_TABLE_NAME + "'", null, null, null, null);
 
 		int seq = -1;

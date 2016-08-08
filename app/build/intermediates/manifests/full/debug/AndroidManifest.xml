@@ -14,7 +14,7 @@
         android:label="@string/app_name"
         android:theme="@style/AppTheme" >
         <activity
-            android:name="jp.shimi.saifu.Diary"
+            android:name="jp.shimi.saifu.MainActivity"
             android:label="@string/title_activity_diary" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

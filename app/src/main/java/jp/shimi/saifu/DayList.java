@@ -156,7 +156,7 @@ public class DayList {
 	}
 	
 	// 指定した日にアイテムデータを上書きする
-	public void setItemData(Calendar date, ItemData newItem, int itemPos){
+	/*public void setItemData(Calendar date, ItemData newItem, int itemPos){
 		int pos = getDataPositionByDate(date);
 		if(pos < 0){
 			//Log.d("addItemData", "Error pos == "+ pos);
@@ -165,6 +165,22 @@ public class DayList {
 			this.dataList.get(pos).setItem(itemPos, newItem);
 			UpdateBalance(pos);
 		}
+	}*/
+
+	/**
+	 * アイテムを更新する(idで一致を判断する)
+	 * TODO:位置が指定できていない。前のアイテムが消えていない
+     */
+	public void updateItemData(ItemData updateItem){
+		int count = 0;
+		for(ItemData i : getData(updateItem.getDate()).getItemList()){
+			if(i.getId() == updateItem.getId()){
+				getData(updateItem.getDate()).getItemList().set(count, updateItem);
+			}
+			count++;
+		}
+		int pos = getDataPositionByDate(updateItem.getDate());
+		UpdateBalance(pos);
 	}
 	
 	// 指定した日にアイテムリストを上書きする

@@ -6,7 +6,7 @@ import java.util.List;
 
 import jp.shimi.saifu.dialog.CheckDialogFragment;
 import jp.shimi.saifu.dialog.DialogListener;
-import jp.shimi.saifu.dialog.EditItemDialog;
+import jp.shimi.saifu.dialog.EditItemDialogFragment;
 import jp.shimi.saifu.dialog.ItemMenuDialogFragment;
 import jp.shimi.saufu.R;
 
@@ -23,6 +23,10 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.TextView;
+
+/**
+ * アイテムリストを生成するアダプター
+ */
 
 public class ItemAdapter extends ArrayAdapter<ItemData>{
 	private LayoutInflater inflater;
@@ -151,9 +155,11 @@ public class ItemAdapter extends ArrayAdapter<ItemData>{
     	
     	@Override
 		public void doEditClick() {
-    		EditItemDialog dialog = new EditItemDialog(context ,item, position);
-    		EditItemDialogListener listener = new EditItemDialogListener();
-    		dialog.CreateDialog(listener);
+			// アイテムの編集ダイアログを生成
+			EditItemDialogFragment newFragment;
+			newFragment = EditItemDialogFragment.newInstance(item, position);
+			newFragment.setEditItemDialogListener((MainActivity)context);
+			newFragment.show(((Activity)context).getFragmentManager(), "edit_item_dialog");
 		}
 
 		@Override
@@ -233,7 +239,6 @@ public class ItemAdapter extends ArrayAdapter<ItemData>{
 		public void removeItem(Calendar deletedDate);
 
 	}
-
 
 	/**                                                                                                                
 	 * This method convets dp unit to equivalent device specific value in pixels.

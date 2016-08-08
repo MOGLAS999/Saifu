@@ -8,20 +8,20 @@
         "source": "C:\\Users\\gerog\\AndroidStudioProjects\\Saifu\\app\\src\\main\\res\\layout\\calendar.xml"
     },
     {
-        "merged": "C:\\Users\\gerog\\AndroidStudioProjects\\Saifu\\app\\build\\intermediates\\res\\merged\\debug\\layout\\day.xml",
-        "source": "C:\\Users\\gerog\\AndroidStudioProjects\\Saifu\\app\\src\\main\\res\\layout\\day.xml"
-    },
-    {
         "merged": "C:\\Users\\gerog\\AndroidStudioProjects\\Saifu\\app\\build\\intermediates\\res\\merged\\debug\\layout\\item_row.xml",
         "source": "C:\\Users\\gerog\\AndroidStudioProjects\\Saifu\\app\\src\\main\\res\\layout\\item_row.xml"
+    },
+    {
+        "merged": "C:\\Users\\gerog\\AndroidStudioProjects\\Saifu\\app\\build\\intermediates\\res\\merged\\debug\\layout\\day.xml",
+        "source": "C:\\Users\\gerog\\AndroidStudioProjects\\Saifu\\app\\src\\main\\res\\layout\\day.xml"
     },
     {
         "merged": "C:\\Users\\gerog\\AndroidStudioProjects\\Saifu\\app\\build\\intermediates\\res\\merged\\debug\\layout\\category_dialog.xml",
         "source": "C:\\Users\\gerog\\AndroidStudioProjects\\Saifu\\app\\src\\main\\res\\layout\\category_dialog.xml"
     },
     {
-        "merged": "C:\\Users\\gerog\\AndroidStudioProjects\\Saifu\\app\\build\\intermediates\\res\\merged\\debug\\layout\\diary.xml",
-        "source": "C:\\Users\\gerog\\AndroidStudioProjects\\Saifu\\app\\src\\main\\res\\layout\\diary.xml"
+        "merged": "C:\\Users\\gerog\\AndroidStudioProjects\\Saifu\\app\\build\\intermediates\\res\\merged\\debug\\layout\\main_activity.xml",
+        "source": "C:\\Users\\gerog\\AndroidStudioProjects\\Saifu\\app\\src\\main\\res\\layout\\main_activity.xml"
     },
     {
         "merged": "C:\\Users\\gerog\\AndroidStudioProjects\\Saifu\\app\\build\\intermediates\\res\\merged\\debug\\layout\\category_row.xml",
