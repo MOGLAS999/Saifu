@@ -33,10 +33,11 @@ implements SelectCategoryDialogFragment.SelectedCategoryListener{
 	private EditItemDialogListener listener = null;
 
 	// アイテムの新規作成
-	public static EditItemDialogFragment newInstance(Calendar initDate) {
+	public static EditItemDialogFragment newInstance(Calendar initDate, Context context) {
 		EditItemDialogFragment fragment = new EditItemDialogFragment();
 
-		int nextItemId = MySQLiteAdapter.getMaxItemId() + 1;
+		MySQLiteAdapter dbAdapter = new MySQLiteAdapter(context);
+		int nextItemId = dbAdapter.getMaxItemId() + 1;
 
 		// 引数を設定
 		Bundle args = new Bundle();

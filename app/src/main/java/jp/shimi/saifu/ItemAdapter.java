@@ -190,22 +190,6 @@ public class ItemAdapter extends ArrayAdapter<ItemData>{
 
 		@Override
 		public void ClickedNegativeButton() {}
-
-    	
-    	private class EditItemDialogListener implements DialogListener{
-
-    		@Override
-    		public void doPositiveClick() {
-    			Calendar c = item.getDate();
-        		remove(item);
-        		itemRemoveListener.removeItem(c);
-    		}
-
-			@Override
-			public void doNegativeClick() {
-				// TODO 自動生成されたメソッド・スタブ
-			}
-    	}
     }
 
     public void setMoveItemListener(MoveItemListener listener){

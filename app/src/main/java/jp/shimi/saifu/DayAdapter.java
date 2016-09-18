@@ -129,7 +129,7 @@ public class DayAdapter extends ArrayAdapter<DayData>
     	public void doFirstClick() {
 			// アイテムの新規作成ダイアログを生成
 			EditItemDialogFragment newFragment;
-			newFragment = EditItemDialogFragment.newInstance(day.getDate());
+			newFragment = EditItemDialogFragment.newInstance(day.getDate(), context);
 			newFragment.setEditItemDialogListener((MainActivity)context);
 			newFragment.show(((Activity)context).getFragmentManager(), "edit_item_dialog");
     	}

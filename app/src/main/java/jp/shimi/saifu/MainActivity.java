@@ -21,6 +21,7 @@ import android.widget.ListView;
 
 // TODO:アイテムの追加・変更時にデータベースにすぐ登録させるようにする
 // TODO:アイテムリストの取得をすべてデータベースから直接行う
+// TODO:DB更新後に、DBの変更をViewに反映させる。（特に日付をまたいだアイテムの移動）
 
 // FIXME:アイテム編集時に、日付が変わった際に変更が反映されない。
 // FIXME:アイテム削除時に、変更がDBに反映されない。
@@ -33,14 +34,11 @@ EditItemDialogFragment.EditItemDialogListener{
 	private Button button1;
 	private ListView listView;
 	private DayList lDay = new DayList(); // 表示専用なので、DBから取得するとき以外は追加・変更・削除は厳禁　TODO
-	private static MySQLiteAdapter mySqliteAdapter;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.main_activity);
-
-		mySqliteAdapter = new MySQLiteAdapter(this);
 
 		loadDayDataFromDB();
 		loadItemDataFromDB();
@@ -86,14 +84,6 @@ EditItemDialogFragment.EditItemDialogListener{
 			default:
 				return super.onOptionsItemSelected(item);
 		}
-	}
-
-	@Override
-	public void onDestroy(){
-		super.onDestroy();
-
-		// SQLiteインスタンスをクローズする
-		mySqliteAdapter.destruction();
 	}
 
 	/**
@@ -176,7 +166,7 @@ EditItemDialogFragment.EditItemDialogListener{
  	 */
 	private void createItemCreateDialog(Calendar date){
 		EditItemDialogFragment newFragment;
-		newFragment = EditItemDialogFragment.newInstance(date);
+		newFragment = EditItemDialogFragment.newInstance(date, this);
 		newFragment.setEditItemDialogListener(this);
 		//newFragment.setCancelable(false);
 		newFragment.show(getFragmentManager(), "edit_item_dialog");
@@ -203,19 +193,12 @@ EditItemDialogFragment.EditItemDialogListener{
 			if (itemData.getDate().equals(initDate)) {
 				//lDay.SetItemData(initDate, itemData, editPosition);
 				// 削除処理は各ArrayAdapterで行うので、追加のみ行う
-				//TODO:更新元アイテムの削除処理が行われないのでどうにかする。
-				// というか普通に更新でいいと思うけど、IDが重複してlDayに登録されている。
-				// lDayに一旦入れてからDBに更新させるか、DBに直接更新させてlDayをDBと同期するかのどちらかにする。
 				if (editPosition + 1 == lDay.getListSize()) {
-					//lDay.addItemData(itemData.getDate(), itemData);
 					lDay.updateItemData(itemData);
 				} else {
-					//lDay.addItemData(itemData.getDate(), itemData, editPosition + 1);
 					lDay.updateItemData(itemData);
 				}
 			} else {
-				//lDay.RemoveItemData(initDate, editPosition);
-				//lDay.addItemData(itemData.getDate(), itemData);
 				lDay.updateItemData(itemData);
 			}
 		} else {
@@ -247,7 +230,7 @@ EditItemDialogFragment.EditItemDialogListener{
 		lDay.UpdateBalance(deletedDate);
 
 		updateListViewWithNoScroll();
-		
+
 		int position = lDay.getDataPositionByDate(deletedDate);
 		if(position == -1){
 			deleteDayDataFromDB(deletedDate);
@@ -272,49 +255,47 @@ EditItemDialogFragment.EditItemDialogListener{
 	}
 
 	public void loadDayDataFromDB(){
-		//MySQLiteAdapter dbAdapter = new MySQLiteAdapter(this);
-		lDay = mySqliteAdapter.loadAllDayList();
+		MySQLiteAdapter dbAdapter = new MySQLiteAdapter(this);
+		lDay = dbAdapter.loadAllDayList();
 	}
 	
 	public void loadItemDataFromDB(){
-		//MySQLiteAdapter dbAdapter = new MySQLiteAdapter(this);
+		MySQLiteAdapter dbAdapter = new MySQLiteAdapter(this);
 
 		for(int i = 0; i < lDay.getListSize(); i++){
 			Calendar date = lDay.getData(i).getDate();
-			lDay.setItemList(date, mySqliteAdapter.loadItemData(date));
+			lDay.setItemList(date, dbAdapter.loadItemData(date));
 		}
 	}
 	
 	public void insertDayDataToDB(DayData dayData){
-		//MySQLiteAdapter dbAdapter = new MySQLiteAdapter(this);
+		MySQLiteAdapter dbAdapter = new MySQLiteAdapter(this);
 
-		mySqliteAdapter.insertDayData(dayData);
+		dbAdapter.insertDayData(dayData);
 	}
 	
 	public void insertItemDataToDB(ItemData itemData, int sequence){
-		//MySQLiteAdapter dbAdapter = new MySQLiteAdapter(this);
+		MySQLiteAdapter dbAdapter = new MySQLiteAdapter(this);
 
-		mySqliteAdapter.insertItemData(itemData, sequence);
+		dbAdapter.insertItemData(itemData, sequence);
 	}
 
 	/**
 	 * 渡した日データのアイテムリストでアイテムテーブル内の指定日のデータを再初期化する。
  	 */
 	public void updateDayDataToDB(DayData dayData){
-		//MySQLiteAdapter dbAdapter = new MySQLiteAdapter(this);
+		MySQLiteAdapter dbAdapter = new MySQLiteAdapter(this);
 
 		Log.d("updateDayDataToDB", dayData.getStringDate());
-		/*deleteDayDataFromDB(dayData.getDate());
-		insertDayDataToDB(dayData);
-		dbAdapter.insertItemList(dayData);*/
 		for(ItemData i : dayData.getItemList())
 			Log.d("updateDayDataToDB", i.getId() +":"+ i.getName());
-		mySqliteAdapter.updateItemList(dayData);
+		//FIXME:Updateはリストの状態そのままに更新するわけではない。削除処理は検知されていない。
+		dbAdapter.updateItemList(dayData);
 	}
 	
 	public void deleteDayDataFromDB(Calendar date){
-		//MySQLiteAdapter dbAdapter = new MySQLiteAdapter(this);
+		MySQLiteAdapter dbAdapter = new MySQLiteAdapter(this);
 
-		mySqliteAdapter.deleteDayData(DateChanger.ChangeToString(date));
+		dbAdapter.deleteDayData(DateChanger.ChangeToString(date));
 	}
 }
