@@ -46,9 +46,9 @@ Network Trash Folder
 Temporary Items
 .apdisk
 
-# http://qiita.com/komax/items/d1aaecaec0a22cb5bc4e
+# 
 *.iml
-.gradle
+*.gradle
 /local.properties
 /.idea/workspace.xml
 /.idea/libraries
